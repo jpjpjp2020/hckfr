@@ -1,0 +1,59 @@
+# .gitignore
+
+# Ignore Django related files
+*.log
+*.pot
+*.pyc
+*.pyo
+*.rej
+*.sqlite3
+__pycache__/
+media
+staticfiles
+migrations/
+
+#static debug
+collected_static/
+
+# Ignore Python Byte-compiled / optimized files and Python distribution / packaging
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Ignore environment related files
+.env
+
+# Ignore IDEs and editors related files
+.DS_Store
+.idea
+*.sw?
+
+# Ignore OS generated files
+ehthumbs.db
+Thumbs.db
+
+# Node modules
+node_modules/
+
+# npm debugging logs
+npm-debug.log*
+
+# Debug log from npm
+npm-debug.log
+
+# Yarn Integrity file
+.yarn-integrity
+
+# Next.js build output
+.next
+
+# VS Code settings
+.vscode/
+
+# Python virtual env
+env/
+*.venv
+
+# Ignore specific CSS file - add this
