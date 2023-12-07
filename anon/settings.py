@@ -26,7 +26,12 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*.ngrok.io']
+ALLOWED_HOSTS = [
+    '*.ngrok.io',  # Add ngrok wildcard
+    'localhost',   # Add localhost
+    '127.0.0.1',   # Add the local IP address (IPv4)
+    '::1',         # Add the local IP address (IPv6)
+]
 
 # Application definition
 
@@ -37,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'entry'
 ]
 
 MIDDLEWARE = [
