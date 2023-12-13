@@ -50,7 +50,7 @@ class ManagementUser(AbstractBaseUser):
 
 
 class OversightUser(AbstractBaseUser):
-    email = models.ForeignKey(ManagementUser, on_delete=models.CASCADE, related_name='oversight_users')
+    email = models.ForeignKey(ManagementUser, on_delete=models.CASCADE, related_name='oversight_users')  # consider data retention policy edge cases later on
     is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
