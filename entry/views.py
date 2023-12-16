@@ -53,13 +53,13 @@ def worker_login(request):
     if request.method == 'POST':
         form = WorkerUserLoginForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('usename')
+            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 # redirect to feedback dashboards
-                return redirect('feeback:worker_dashbard')
+                return redirect('feedback:worker_dashboard')
             else:
                 form.add_error(None, "Invalid username or password.")
     else:
@@ -68,8 +68,37 @@ def worker_login(request):
 
 
 def employer_login(request):
-    pass
+    if request.method == 'POST':
+        form = EmployerUserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # redirect to feedback dashboards
+                return redirect('feedback:employer_dashboard')
+            else:
+                form.add_error(None, "Invalid username or password.")
+    else:
+        form = EmployerUserLoginForm()
+    return render(request, 'login/employer_login.html', {'form': form})
+
 
 
 def oversight_login(request):
-    pass
+    if request.method == 'POST':
+        form = OversightUserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # redirect to feedback dashboards
+                return redirect('feedback:oversight_dashboard')
+            else:
+                form.add_error(None, "Invalid username or password.")
+    else:
+        form = OversightUserLoginForm()
+    return render(request, 'login/oversight_login.html', {'form': form})
