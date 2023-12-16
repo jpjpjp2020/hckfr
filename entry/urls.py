@@ -4,6 +4,8 @@ from . import views
 app_name = 'entry'
 
 urlpatterns = [
+    # home page as entry point
+    path('', views.home, name='home'),
     # reg urls -> views
     path('wregister/', views.worker_register, name='worker_register'),
     path('eregister/', views.employer_register, name='employer_register'),

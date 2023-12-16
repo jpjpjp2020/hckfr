@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import WorkerUserRegForm, EmployerUserRegForm, OversightUserRegForm, WorkerUserLoginForm, EmployerUserLoginForm, OversightUserLoginForm
 
+# home view
+
+def home(request):
+    return render(request, 'landing.html')
 
 # registration views
 

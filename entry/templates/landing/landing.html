@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="role-selection">
+        <h1>Welcome to huckfr</h1>
+        <!-- Assuming most users will be returning, default to login. NB worker gets registration -->
+        <a href="{% url 'entry:worker_register' %}" class="button">Send Feedback (Employee)</a>
+        <a href="{% url 'entry:employer_login' %}" class="button">Get Feedback (Employer)</a>
+        <a href="{% url 'entry:oversight_login' %}" class="button">Oversight (Management)</a>
+        
+        <!-- Links to switch to registration if a user is new NB worker gets login -->
+        <p>New here? <a href="{% url 'entry:worker_login' %}">Sign up as an Employee</a>.</p>
+        <p>New here? <a href="{% url 'entry:employer_register' %}">Sign up as an Employer</a>.</p>
+        <p>New here? <a href="{% url 'entry:oversight_register' %}">Sign up as Management</a>.</p>
+    </div>
+
+{% endblock %}
