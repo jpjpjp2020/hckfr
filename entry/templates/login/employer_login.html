@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div class="login container">
+
+        <h1>Sign in as an employer</h1>
+
+        <form method="post" action="{% url 'entry:employer_login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Sign in">
+        </form>
+
+        <div class="additional-links">
+            <a href="{% url 'entry:employer_register' %}">Don't have an account: Sign Up</a>
+            <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
+        </div>
+
+    </div>
+
+{% endblock %}

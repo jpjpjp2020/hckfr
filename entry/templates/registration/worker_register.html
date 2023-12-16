@@ -10,7 +10,7 @@
         <form method="post" action="{% url 'entry:worker_register' %}">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Register">
+            <input type="submit" value="Sign up">
         </form>
 
         <div class="additional-links">

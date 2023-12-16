@@ -5,7 +5,7 @@ from .forms import WorkerUserRegForm, EmployerUserRegForm, OversightUserRegForm,
 # home view
 
 def home(request):
-    return render(request, 'landing.html')
+    return render(request, 'landing/landing.html')
 
 # registration views
 
