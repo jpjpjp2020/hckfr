@@ -8,18 +8,28 @@ from django.utils.translation import gettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
     
+    # internal:
+
     def create_superuser(self, email, password, **extra_fields):
+        
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
-        if email is None:
-            raise ValueError(_('Superusers must have an email.'))
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        
+        if not email:
+            raise ValueError(_('The Email field must be set'))
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.role = 'admin'
+        user.role = 'admin'  # You might add an 'admin' role to ROLE_CHOICES if needed
         user.save(using=self._db)
         return user
+    
+    # external:
 
     def create_worker_user(self, username, password=None, **extra_fields):
         if not username:

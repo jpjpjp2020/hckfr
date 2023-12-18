@@ -14,7 +14,7 @@ class UserAdmin(admin.ModelAdmin):
         if obj.role == 'employer':
             return obj.oversight_value
         return None
-    get_oversight_value.short_description = 'Oversight Email'
+    get_oversight_value.short_description = 'Oversight Value'
 
     def get_linked_employers(self, obj):
         if obj.role == 'oversight':

@@ -27,6 +27,12 @@ class UserLoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(widget=forms.PasswordInput())
 
+    # Override the builtin fallback messages.
+    # error_messages = {
+    #     'invalid_login': _("Please enter correct credentials. "
+    #                        "Note that fields may be case-sensitive."),
+    # }
+
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)
         # Override the label for the 'username' field to 'Email'

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import UserRegForm, UserLoginForm
-
+from django.contrib import messages
 
 # home view
 
@@ -19,6 +19,7 @@ def worker_register(request):
             user.set_password(form.cleaned_data.get('password'))
             user.save()
 
+            messages.success(request, 'Account successfully created. You can sign in now.')
             return redirect('entry:worker_login')
     else:
         form = UserRegForm(initial={'role': 'worker'})
@@ -34,6 +35,7 @@ def employer_register(request):
                 user.set_password(form.cleaned_data.get('password'))
                 user.save()
 
+                messages.success(request, 'Account successfully created. You can sign in now.')
                 return redirect('entry:employer_login')
     else:
         form = UserRegForm(initial={'role': 'employer'})
@@ -49,6 +51,7 @@ def oversight_register(request):
                 user.set_password(form.cleaned_data.get('password'))
                 user.save()
 
+                messages.success(request, 'Account successfully created. You can sign in now.')
                 return redirect('entry:oversight_login')
     else:
         form = UserRegForm(initial={'role': 'oversight'})
