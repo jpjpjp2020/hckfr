@@ -9,9 +9,13 @@
 
         <form method="post" action="{% url 'entry:employer_register' %}">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Sign up">
+            <input type="email" name="{{ form.email.name }}" placeholder="Email" id="id_{{ form.email.id_for_label }}" class="">
+            <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
+            <input type="email" name="{{ form.oversight_email.name }}" placeholder="*Oversight email" id="id_{{ form.oversight_email.id_for_label }}" class="">
+            <button type="submit">Sign up</button>
         </form>
+
+        <p>*Stakeholder email for direct access to all raw/unfiltered feedback</p>
 
         <div class="additional-links">
             <a href="{% url 'entry:employer_login' %}">Already have an account: Sign in</a>

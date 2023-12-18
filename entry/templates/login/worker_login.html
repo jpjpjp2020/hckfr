@@ -9,7 +9,8 @@
 
         <form method="post" action="{% url 'entry:worker_login' %}">
             {% csrf_token %}
-            {{ form.as_p }}
+            <input type="text" name="username" placeholder="Username" id="id_username">
+            <input type="password" name="password" placeholder="Password" id="id_password">
             <input type="submit" value="Sign in">
         </form>
 

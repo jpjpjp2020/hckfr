@@ -9,8 +9,9 @@
 
         <form method="post" action="{% url 'entry:worker_register' %}">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Sign up">
+            <input type="text" name="{{ form.username.name }}" placeholder="Username" id="id_{{ form.username.id_for_label }}" class="">
+            <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
+            <button type="submit">Sign up</button>
         </form>
 
         <div class="additional-links">
