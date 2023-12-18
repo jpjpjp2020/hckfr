@@ -11,13 +11,13 @@ class UserRegForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password', 'oversight_email']  # All pos fields
+        fields = ['email', 'username', 'password', 'oversight_value']  # All pos fields
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].required = False
         self.fields['username'].required = False
-        self.fields['oversight_email'].required = False
+        self.fields['oversight_value'].required = False
 
 
 # Login forms

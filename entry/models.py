@@ -17,6 +17,7 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
+        user.role = 'admin'
         user.save(using=self._db)
         return user
 
@@ -29,11 +30,11 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_employer_user(self, email, password=None, oversight_email=None, **extra_fields):
+    def create_employer_user(self, email, password=None, oversight_value=None, **extra_fields):
         if not email:
             raise ValueError(_('Email is required'))
         email = self.normalize_email(email)
-        user = self.model(email=email, oversight_email=oversight_email, **extra_fields)
+        user = self.model(email=email, oversight_value=oversight_value, **extra_fields)
         user.set_password(password)
         user.role = 'employer'
         user.save(using=self._db)
@@ -43,7 +44,7 @@ class CustomUserManager(BaseUserManager):
         if not email:
             raise ValueError(_('Email is required'))
         email = self.normalize_email(email)
-        user = self.model(email=email, employer=employer, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.role = 'oversight'
         user.save(using=self._db)
@@ -58,7 +59,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=25, unique=True, null=True, blank=True)
     email = models.EmailField(unique=True, null=True, blank=True)
     employer = models.ForeignKey('self', on_delete=models.CASCADE, related_name='oversight_users', null=True, blank=True)
-    oversight_email = models.EmailField(null=True, blank=True)  # use value but def as email in form rendering
+    oversight_value = models.EmailField(null=True, blank=True)  # use value but def as email in form rendering
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
@@ -66,6 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('worker', 'Worker'),
         ('employer', 'Employer'),
         ('oversight', 'Oversight'),
+        ('admin', 'Admin'),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 

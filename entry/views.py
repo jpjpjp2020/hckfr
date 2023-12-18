@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .forms import UserRegForm, UserLoginForm
 
-# import unified forms above
-# define the logic WITH USER ROLES for action:
 
 # home view
 

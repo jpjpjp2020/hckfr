@@ -11,7 +11,7 @@
             {% csrf_token %}
             <input type="email" name="{{ form.email.name }}" placeholder="Email" id="id_{{ form.email.id_for_label }}" class="">
             <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
-            <input type="email" name="{{ form.oversight_email.name }}" placeholder="*Oversight email" id="id_{{ form.oversight_email.id_for_label }}" class="">
+            <input type="email" name="{{ form.oversight_value.name }}" placeholder="*Oversight email" id="id_{{ form.oversight_value.id_for_label }}" class="">
             <button type="submit">Sign up</button>
         </form>
 
