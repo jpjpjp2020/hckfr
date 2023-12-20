@@ -7,10 +7,24 @@
 
         <h1>Sign up as an employee</h1>
 
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
         <form method="post" action="{% url 'entry:worker_register' %}">
             {% csrf_token %}
-            <input type="text" name="{{ form.username.name }}" placeholder="Username" id="id_{{ form.username.id_for_label }}" class="">
-            <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
+            <div class="form-group">
+                <label for="id_username" class="sr-only">Username:</label>
+                <input type="text" name="{{ form.username.name }}" placeholder="Username" id="id_{{ form.username.id_for_label }}" class="">
+            </div>
+            <div class="form-group">
+                <label for="id_username" class="sr-only">Username:</label>
+                <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
+            </div>
             <button type="submit">Sign up</button>
         </form>
 

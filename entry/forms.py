@@ -24,16 +24,17 @@ class UserRegForm(forms.ModelForm):
 # Placheholders for form fields directly in html to keep the front concern seprate
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}))
-    password = forms.CharField(widget=forms.PasswordInput())
 
-    # Override the builtin fallback messages.
-    # error_messages = {
-    #     'invalid_login': _("Please enter correct credentials. "
-    #                        "Note that fields may be case-sensitive."),
-    # }
+    role = forms.CharField(widget=forms.HiddenInput(), required=False)
 
-    def __init__(self, *args, **kwargs):
-        super(UserLoginForm, self).__init__(*args, **kwargs)
-        # Override the label for the 'username' field to 'Email'
-        self.fields['username'].label = "Email"
+    def clean(self):
+
+        super().clean()
+
+        role = self.cleaned_data.get('role')
+
+        if role == 'worker':
+            username = self.cleaned_data.get('username')
+        else:
+            email = self.cleaned_data.get('username')
+        return self.cleaned_data

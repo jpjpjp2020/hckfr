@@ -5,14 +5,14 @@
 
     <div class="login container">
 
-        <h1>Sign in as an employee</h1>
+        <h1>Log in as an employee</h1>
 
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in form.non_field_errors %}
-              {{ error }}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
             {% endfor %}
-          </div>
         {% endif %}
 
         <form method="post" action="{% url 'entry:worker_login' %}">
@@ -31,7 +31,8 @@
                 <div class="invalid-feedback">{{ error }}</div>
               {% endfor %}
           </div>
-          <button type="submit" class="btn btn-primary">Sign in</button>
+          <button type="submit" class="">Sign in</button>
+          <input type="hidden" name="role" value="worker">
       </form>
 
         <div class="additional-links">
@@ -44,13 +45,4 @@
 {% endblock %}
 
 {% block scripts %}
-{% if messages %}
-  <script type="text/javascript">
-    window.addEventListener('load', function() {
-      {% for message in messages %}
-        alert("{{ message }}");
-      {% endfor %}
-    });
-  </script>
-{% endif %}
 {% endblock scripts %}

@@ -5,7 +5,7 @@
 
     <div class="login container">
 
-        <h1>Sign in as an employer</h1>
+        <h1>Log in as an employer</h1>
 
         <form method="post" action="{% url 'entry:employer_login' %}">
             {% csrf_token %}
@@ -24,13 +24,4 @@
 {% endblock %}
 
 {% block scripts %}
-{% if messages %}
-  <script type="text/javascript">
-    window.addEventListener('load', function() {
-      {% for message in messages %}
-        alert("{{ message }}");
-      {% endfor %}
-    });
-  </script>
-{% endif %}
 {% endblock scripts %}
