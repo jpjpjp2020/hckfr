@@ -1,4 +1,4 @@
-<!-- {% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
@@ -7,12 +7,41 @@
 
         <h1>Sign up as an employer</h1>
 
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
         <form method="post" action="{% url 'entry:employer_register' %}">
             {% csrf_token %}
-            <input type="email" name="{{ form.email.name }}" placeholder="Email" id="id_{{ form.email.id_for_label }}" class="">
-            <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
-            <input type="email" name="{{ form.oversight_value.name }}" placeholder="*Oversight email" id="id_{{ form.oversight_value.id_for_label }}" class="">
-            <button type="submit">Sign up</button>
+            <div class="form-group">
+                <label for="id_email" class="sr-only">Email</label>
+                <input type="email" name="{{ form.email.name }}" placeholder="Email" id="id_{{ form.email.id_for_label }}" class="">
+                {% for error in form.email.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_password" class="sr-only">Password</label>
+                <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
+                {% for error in form.password.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_oversight_email" class="sr-only">Oversight email</label>
+                <input type="email" name="{{ form.oversight_value.name }}" placeholder="*Oversight email" id="id_{{ form.oversight_value.id_for_label }}" class="">
+                {% for error in form.email.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_submit" class="sr-only">Submit</label>
+                <button type="submit">Sign up</button>
+            </div>
         </form>
 
         <p>*Stakeholder email for direct access to all raw/unfiltered feedback</p>
@@ -24,4 +53,4 @@
 
     </div>
 
-{% endblock %} -->
+{% endblock %}

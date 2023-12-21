@@ -5,5 +5,5 @@ class EntryConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'entry'
 
-    def ready(self):
-        import entry.signals
+    # def ready(self):
+    #     import entry.signals

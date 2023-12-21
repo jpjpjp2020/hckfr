@@ -10,22 +10,6 @@ def home(request):
 
 # registration views
 
-# def worker_register(request):
-#     if request.method == 'POST':
-#         form = UserRegForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.role = 'worker'  # Set the role to branch from unified
-#             user.set_password(form.cleaned_data.get('password'))
-#             user.save()
-
-#             messages.success(request, 'Account successfully created. You can sign in now.')
-#             return redirect('entry:worker_login')
-#     else:
-#         form = UserRegForm(initial={'role': 'worker'})
-#     return render(request, 'registration/worker_register.html', {'form': form})
-
-
 def employer_register(request):
     if request.method == 'POST':
             form = UserRegForm(request.POST)
@@ -42,97 +26,75 @@ def employer_register(request):
     return render(request, 'registration/employer_register.html', {'form': form})
 
 
-# def oversight_register(request):
+# CLEAN ONE
+# def employer_login(request):
 #     if request.method == 'POST':
-#             form = UserRegForm(request.POST)
-#             if form.is_valid():
-#                 user = form.save(commit=False)
-#                 user.role = 'oversight' 
-#                 user.set_password(form.cleaned_data.get('password'))
-#                 user.save()
-
-#                 messages.success(request, 'Account successfully created. You can sign in now.')
-#                 return redirect('entry:oversight_login')
-#     else:
-#         form = UserRegForm(initial={'role': 'oversight'})
-#     return render(request, 'registration/oversight_register.html', {'form': form})
-
-
-# login views
-
-# def worker_login(request):
-#     if request.method == 'POST':
-#         post_data = request.POST.copy()
-#         post_data['role'] = 'worker'
-
-#         form = UserLoginForm(post_data)
-#         print("POST data:", request.POST)
-#         print("Modified form data:", post_data)
-
+#         form = UserLoginForm(request, data=request.POST)
 #         if form.is_valid():
-#             username = form.cleaned_data.get('username')
+#             email = form.cleaned_data.get('username')
 #             password = form.cleaned_data.get('password')
-#             #debug
-#             print("Username:", username)
-#             print("Password:", password)
-#             print("Calling authenticate...")
-#             user = authenticate(username=username, password=password, role='worker')
-#             print("Authenticated user:", user)
+#             user = authenticate(email=email, password=password)
 #             if user is not None:
 #                 login(request, user)
-#                 return redirect('feedback:worker_dashboard')
+#                 # redirect to feedback dashboards
+#                 if user.role == 'employer':
+#                     return redirect('feedback:employer_dashboard')
 #             else:
-#                 print("Form errors:", form.errors.as_text())
-#                 messages.error(request, "Invalid username or password.")
-#         else:
-#             print("Form errors immediately after is_valid check:", form.errors)
-#             print("Form errors:", form.errors.as_text())
-#             print("Form is not valid")
-#             print("Form data:", form.data)
-#             print("Form is not valid immediately after validation check")
-#             print("Form errors:", form.errors)
-#             messages.error(request, "Please correct the error below.")
+#                 form.add_error(None, "Invalid email or password.")
 #     else:
 #         form = UserLoginForm()
-#     return render(request, 'login/worker_login.html', {'form': form})
+#     return render(request, 'login/employer_login.html', {'form': form})
 
-
-# update based on the above
+# TEST ONE:
 
 def employer_login(request):
     if request.method == 'POST':
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(email=username, password=password, role='employer')
-            if user is not None:
-                login(request, user)
-                # redirect to feedback dashboards
-                if user.role == 'employer':
-                    return redirect('feedback:employer_dashboard')
-            else:
-                form.add_error(None, "Invalid username or password.")
+            user = form.get_user()
+            login(request, user)
+            if user.role == 'employer':
+                return redirect('feedback:employer_dashboard')
+            # Add any other role-based redirects if necessary
+        else:
+            print("Form is not valid. Errors:", form.errors)
     else:
         form = UserLoginForm()
     return render(request, 'login/employer_login.html', {'form': form})
 
 
 
-# def oversight_login(request):
+# DEBUG ONE
+# def employer_login(request):
+#     print("Employer login view called with method:", request.method)
+
 #     if request.method == 'POST':
 #         form = UserLoginForm(request, data=request.POST)
+#         print("Form data received:", request.POST)
+
 #         if form.is_valid():
-#             username = form.cleaned_data.get('username')
+#             print("Form is valid")
+#             email = form.cleaned_data.get('username')
 #             password = form.cleaned_data.get('password')
-#             user = authenticate(email=username, password=password, role='oversight')
+#             print("Extracted data - Email:", email, "Password:", password)
+#             print("About to call authenticate with - Email:", email, "Password:", password)
+#             user = authenticate(email=email, password=password)
+#             print("User returned from authenticate:", user)
+
 #             if user is not None:
 #                 login(request, user)
-#                 # redirect to feedback dashboards
-#                 if user.role == 'oversight':
-#                     return redirect('feedback:oversight_dashboard')
+#                 print("User logged in:", user)
+                
+#                 if user.role == 'employer':
+#                     print("Redirecting to employer dashboard")
+#                     return redirect('feedback:employer_dashboard')
 #             else:
-#                 form.add_error(None, "Invalid username or password.")
+#                 print("Authentication failed")
+#                 form.add_error(None, "Invalid email or password.")
+#         else:
+#             print("Form is not valid. Errors:", form.errors)
 #     else:
 #         form = UserLoginForm()
-#     return render(request, 'login/oversight_login.html', {'form': form})
+#         print("GET request, rendering empty login form")
+
+#     return render(request, 'login/employer_login.html', {'form': form})

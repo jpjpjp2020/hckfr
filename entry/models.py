@@ -38,8 +38,9 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, oversight_value=oversight_value, **extra_fields)
         user.set_password(password)
         user.role = 'employer'
+        user.is_active = True  # Explicitly set is_active to True
         user.save(using=self._db)
-        return user        
+        return user
     
 
 # unified auth:
@@ -57,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
-    USERNAME_FIELD = 'email'  
+    USERNAME_FIELD = 'email'
 
     objects = CustomUserManager()
 
