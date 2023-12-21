@@ -25,20 +25,11 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.role = 'admin'  # You might add an 'admin' role to ROLE_CHOICES if needed
+        user.role = 'admin'
         user.save(using=self._db)
         return user
     
     # external:
-
-    def create_worker_user(self, username, password=None, **extra_fields):
-        if not username:
-            raise ValueError(_('Username is required'))
-        user = self.model(username=username, **extra_fields)
-        user.set_password(password)
-        user.role = 'worker'
-        user.save(using=self._db)
-        return user
 
     def create_employer_user(self, email, password=None, oversight_value=None, **extra_fields):
         if not email:
@@ -48,47 +39,27 @@ class CustomUserManager(BaseUserManager):
         user.set_password(password)
         user.role = 'employer'
         user.save(using=self._db)
-        return user
-
-    def create_oversight_user(self, email, employer, password=None, **extra_fields):
-        if not email:
-            raise ValueError(_('Email is required'))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.role = 'oversight'
-        user.save(using=self._db)
-        return user
-        
+        return user        
     
 
 # unified auth:
     
 class User(AbstractBaseUser, PermissionsMixin):
     
-    username = models.CharField(max_length=25, unique=True, null=True, blank=True)
-    email = models.EmailField(unique=True, null=True, blank=True)
-    employer = models.ForeignKey('self', on_delete=models.CASCADE, related_name='oversight_users', null=True, blank=True)
+    email = models.EmailField(unique=True)
     oversight_value = models.EmailField(null=True, blank=True)  # use value but def as email in form rendering
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
     ROLE_CHOICES = (
-        ('worker', 'Worker'),
         ('employer', 'Employer'),
-        ('oversight', 'Oversight'),
         ('admin', 'Admin'),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
-    USERNAME_FIELD = 'email'  # primary identifier
-    REQUIRED_FIELDS = ['username']  # required only for workers
+    USERNAME_FIELD = 'email'  
 
     objects = CustomUserManager()
-    
-    @property
-    def is_oversight(self):
-        return self.role == 'oversight' and self.employer is not None
 
     def __str__(self):
-        return self.email or self.username
+        return self.email

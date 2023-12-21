@@ -11,30 +11,17 @@ class UserRegForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'username', 'password', 'oversight_value']  # All pos fields
+        fields = ['email', 'password', 'oversight_value']  # Employer values
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['email'].required = False
-        self.fields['username'].required = False
-        self.fields['oversight_value'].required = False
+        self.fields['email'].required = True
+        self.fields['oversight_value'].required = True
 
 
 # Login forms
-# Placheholders for form fields directly in html to keep the front concern seprate
+# Placeholder for new logic, but relies on builtin deault auth for now.
 
 class UserLoginForm(AuthenticationForm):
 
-    role = forms.CharField(widget=forms.HiddenInput(), required=False)
-
-    def clean(self):
-
-        super().clean()
-
-        role = self.cleaned_data.get('role')
-
-        if role == 'worker':
-            username = self.cleaned_data.get('username')
-        else:
-            email = self.cleaned_data.get('username')
-        return self.cleaned_data
+    pass
