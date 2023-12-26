@@ -57,7 +57,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'anon.middleware.RestrictAdminMiddleware',
 ]
 
 ROOT_URLCONF = 'anon.urls'
@@ -139,7 +138,7 @@ AUTHENTICATION_BACKENDS = ['entry.backends.CustomUserBackend']
 # debug with std auth:
 # AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
-LOGOUT_REDIRECT_URL = '/'
+# LOGOUT_REDIRECT_URL = '/'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
