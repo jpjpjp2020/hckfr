@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 
@@ -61,6 +62,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     objects = CustomUserManager()
+
+    def clean(self):
+        super().clean()
+        if self.email == self.oversight_value:
+            raise ValidationError("Oversight email cannot be the same as your email.")
 
     def __str__(self):
         return self.email
