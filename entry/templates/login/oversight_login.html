@@ -1,22 +1,52 @@
-<!-- {% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
 
     <div class="login container">
 
-        <h1>Log in to the oversight portal</h1>
+        <h1>Sign in to the oversight portal</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <form method="post" action="{% url 'entry:oversight_login' %}">
             {% csrf_token %}
-            <input type="email" name="email" placeholder="Email" id="id_email">
-            <input type="password" name="password" placeholder="Password" id="id_password">
-            <input type="submit" value="Sign in">
+            <div class="form-group">
+                <label for="id_email" class="sr-only">Email</label>
+                <input type="email" name="username" placeholder="Email" id="id_email">
+                {% for error in form.email.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_password" class="sr-only">Password</label>
+                <input type="password" name="password" placeholder="Password" id="id_password">
+                {% for error in form.password.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_submit" class="sr-only">Sign in</label>
+                <input type="submit" value="Sign in">
+            </div>
         </form>
 
         <div class="additional-links">
-            <a href="{% url 'entry:oversight_register' %}">Don't have an account: Sign Up</a>
-            <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
+
+            <div>
+                <a href="{% url 'entry:oversight_register' %}">Don't have an account: Sign Up</a>
+            </div>
+
+            <div>
+                <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
+            </div>
+            
         </div>
 
     </div>
@@ -24,4 +54,4 @@
 {% endblock %}
 
 {% block scripts %}
-{% endblock scripts %} -->
+{% endblock scripts %}

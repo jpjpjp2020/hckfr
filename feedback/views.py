@@ -15,7 +15,7 @@ def worker_dashboard(request):
 def employer_dashboard(request):
     return render(request, 'feedback/employer_dashboard.html')
 
-
+@role_required('oversight', redirect_url='entry:oversight_login')
 def oversight_dashboard(request):
     return render(request, 'feedback/oversight_dashboard.html')
 

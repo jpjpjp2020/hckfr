@@ -31,6 +31,7 @@ class CustomUserManager(BaseUserManager):
         return user
     
     # external:
+    # employer:
 
     def create_employer_user(self, email, password=None, oversight_value=None, **extra_fields):
         if not email:
@@ -41,6 +42,19 @@ class CustomUserManager(BaseUserManager):
         user.role = 'employer'
         user.is_active = True  # Explicitly set is_active to True
         user.save(using=self._db)
+        return user
+    
+    # oversight:
+    
+    def create_oversight_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError(_('Email is required'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.role = 'oversight'
+        user.is_active = True
+        user.save(using=self.db)
         return user
     
 
@@ -55,6 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     ROLE_CHOICES = (
         ('employer', 'Employer'),
+        ('oversight','Oversight'),
         ('admin', 'Admin'),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)

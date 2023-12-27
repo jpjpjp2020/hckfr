@@ -1,24 +1,54 @@
-<!-- {% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
     
     <div class="register-container">
 
-        <h1>Set the oversight account password</h1>
+        <h1>Register an oversight account</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
         <form method="post" action="{% url 'entry:oversight_register' %}">
             {% csrf_token %}
-            <input type="email" name="{{ form.email.name }}" placeholder="Email" id="id_{{ form.email.id_for_label }}" class="">
-            <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
-            <button type="submit">Sign up</button>
+            <div class="form-group">
+                <label for="id_email" class="sr-only">Email</label>
+                <input type="email" name="{{ form.email.name }}" placeholder="Email" id="id_{{ form.email.id_for_label }}" class="">
+                {% for error in form.email.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_password" class="sr-only">Password</label>
+                <input type="password" name="{{ form.password.name }}" placeholder="Password" id="id_{{ form.password.id_for_label }}" class="">
+                {% for error in form.password.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for="id_submit" class="sr-only">Sign up</label>
+                <button type="submit">Sign up</button>
+            </div>
         </form>
 
         <div class="additional-links">
-            <a href="{% url 'entry:oversight_login' %}">Already have an account: Sign in</a>
-            <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
+
+            <div>
+                <a href="{% url 'entry:oversight_login' %}">Already have an account: Sign in</a>
+            </div>
+
+            <div>
+                <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
+            </div>
+            
         </div>
 
     </div>
 
-{% endblock %} -->
+{% endblock %}

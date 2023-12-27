@@ -32,14 +32,21 @@
                 {% endfor %}
             </div>
             <div class="form-group">
-                <label for="id_submit" class="sr-only">Submit</label>
+                <label for="id_submit" class="sr-only">Sign in</label>
                 <input type="submit" value="Sign in">
             </div>
         </form>
 
         <div class="additional-links">
-            <a href="{% url 'entry:employer_register' %}">Don't have an account: Sign Up</a>
-            <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
+
+            <div>
+                <a href="{% url 'entry:employer_register' %}">Don't have an account: Sign Up</a>
+            </div>
+
+            <div>
+                <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
+            </div>
+            
         </div>
 
     </div>

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 # Reg forms
 # Placheholders for form fields directly in html to keep the front concern seprate
 
-class UserRegForm(forms.ModelForm):
+class EmployerRegForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
@@ -29,6 +29,28 @@ class UserRegForm(forms.ModelForm):
 
         # Clean method of the User model
         user = User(email=email, oversight_value=oversight_value)
+        user.clean()
+
+        return cleaned_data
+    
+
+class OversightRegform(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User
+        fields = ['email', 'password'] # Oversight values
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].required = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+
+        # Clean method of the User model
+        user = User(email=email)
         user.clean()
 
         return cleaned_data

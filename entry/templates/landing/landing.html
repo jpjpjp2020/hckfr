@@ -7,7 +7,22 @@
         
         <!-- Default to login. NB worker gets registration -->
         
-        <a href="{% url 'entry:employer_login' %}" class="button">Get Feedback (Employer)</a>
+        <div class="landing-link-group">
+
+            <div>
+                <!-- Worker registration | OTHERS are logins initially -->
+            </div>
+                
+            <div>
+                <a href="{% url 'entry:employer_login' %}" class="button">Get Feedback (Employer)</a>
+            </div>
+
+            <div>
+                <a href="{% url 'entry:oversight_login' %}" class="button">Oversight (Management)</a>
+            </div>
+
+        </div>
+        
         
         
     </div>
