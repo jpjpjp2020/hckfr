@@ -1,38 +1,17 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 
-User = get_user_model()
-
 class CustomUserBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
+        User = get_user_model()
         try:
-            email = User.objects.normalize_email(username)  # Need to use User manager to normalize email
-            print("Normalized email:", email)
-            user = User.objects.get(email=email)  # Use normalized email
-            print("User found:", user.email)
-
-            if user.check_password(password):
-                print("Password correct")
-                return user
+            # user type branching or auth
+            if '@' in username:
+                user = User.objects.get(email=User.objects.normalize_email(username))
             else:
-                print("Password check failed")
-                print("Password incorrect")
+                user = User.objects.get(username=username)
+            if user.check_password(password):
+                return user
         except User.DoesNotExist:
-            # pass
-            print("User not found")
+            pass
         return None
-
-
-# class CustomUserBackend(ModelBackend):
-#     def authenticate(self, request, username=None, password=None, **kwargs):
-#         try:
-#             # username is actually the email
-#             user = User.objects.get(email=username)
-
-#             if user.check_password(password):
-#                 return user
-#         except User.DoesNotExist:
-#             # User not found
-#             pass
-        
-#         return None

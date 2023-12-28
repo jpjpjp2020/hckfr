@@ -8,6 +8,7 @@ from entry.decorators import role_required
 # std views - USE CLASS BASED VIEWS!!!!!!!!!! but can have both FBVs and CBVs in the same project!!!
 # can refactor dashboards into CBVs for modularity and element injection
 
+@role_required('worker', redirect_url='entry:worker_login')
 def worker_dashboard(request):
     return render(request, 'feedback/worker_dashboard.html')
 

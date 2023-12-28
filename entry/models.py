@@ -3,9 +3,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 
-
 # acc creation into CustomUserManager and base user as class User
 # !!! oversight value not oversight email !!!
+
 
 class CustomUserManager(BaseUserManager):
     
@@ -54,7 +54,19 @@ class CustomUserManager(BaseUserManager):
         user.set_password(password)
         user.role = 'oversight'
         user.is_active = True
-        user.save(using=self.db)
+        user.save(using=self._db)
+        return user
+    
+    # employee:
+
+    def create_worker_user(self, username, password=None, **extra_fields):
+        if not username:
+            raise ValueError(_('Username is required'))
+        user = self.model(username=username, **extra_fields)
+        user.set_password(password)
+        user.role = 'worker'
+        user.is_active = True
+        user.save(using=self._db)
         return user
     
 
@@ -62,14 +74,16 @@ class CustomUserManager(BaseUserManager):
     
 class User(AbstractBaseUser, PermissionsMixin):
     
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
     oversight_value = models.EmailField(null=True, blank=True)  # use value but def as email in form rendering
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    username = models.CharField(max_length=50, unique=True, null=True, blank=True)
 
     ROLE_CHOICES = (
         ('employer', 'Employer'),
         ('oversight','Oversight'),
+        ('worker', 'Worker'),
         ('admin', 'Admin'),
     )
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
@@ -79,9 +93,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def clean(self):
+        print("User role in clean method:", self.role)  # Debug print
+        print("Email in clean method:", self.email)  # Debug print
+        print("Oversight email in clean method:", self.oversight_value) 
+
         super().clean()
-        if self.email == self.oversight_value:
-            raise ValidationError("Oversight email cannot be the same as your email.")
+        if self.role == 'worker':
+            if not self.username:
+                raise ValidationError("Username is required for worker accounts.")
+        else:
+            if not self.email:
+                raise ValidationError("Email is required for employer and oversight accounts.")
+            if self.email == self.oversight_value:
+                raise ValidationError("Oversight email cannot be the same as your email.")
 
     def __str__(self):
+        if self.role == 'worker':
+            return self.username
         return self.email

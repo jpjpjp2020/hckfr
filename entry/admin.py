@@ -4,8 +4,8 @@ from .models import User
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'role', 'is_active', 'is_superuser_status', 'get_oversight_value', 'password_hash')  # remove pasword hash later!!!
-    search_fields = ('email', 'role')
+    list_display = ('email', 'username', 'role', 'is_active', 'is_superuser_status', 'get_oversight_value', 'password_hash')  # remove pasword hash later!!!
+    search_fields = ('email', 'username', 'role')
     list_filter = ('role', 'is_superuser')
 
     def is_superuser_status(self, obj):
