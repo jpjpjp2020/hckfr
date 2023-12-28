@@ -22,7 +22,6 @@ class WorkerRegForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
-        print("clean_username: username =", username)
 
         # Min-char check
         min_length = 6
@@ -37,9 +36,7 @@ class WorkerRegForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
-        print("clean: cleaned_data =", cleaned_data)
 
-        # Set role on the form's instance
         self.instance.role = 'worker'
 
         return cleaned_data
@@ -90,7 +87,6 @@ class OversightRegform(forms.ModelForm):
         # Clean method of the User model
         user = User(email=email)
         user.clean()
-        print("clean: cleaned_data =", cleaned_data)
         return cleaned_data
 
     

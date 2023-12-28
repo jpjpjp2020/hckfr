@@ -93,9 +93,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def clean(self):
-        print("User role in clean method:", self.role)  # Debug print
-        print("Email in clean method:", self.email)  # Debug print
-        print("Oversight email in clean method:", self.oversight_value) 
 
         super().clean()
         if self.role == 'worker':

@@ -15,7 +15,6 @@ def home(request):
 @ratelimit(key='post:username', method='POST', rate='12/m')
 def worker_register(request):
     if request.method == 'POST':
-        print("POST data:", request.POST)  # debug print
         form = WorkerRegForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
@@ -25,9 +24,6 @@ def worker_register(request):
 
             messages.success(request, 'Account successfully created. You can sign in now.')
             return redirect('entry:worker_login')
-        else:
-            # Print form errors if the form is not valid
-            print("Form errors:", form.errors)
     else:
         # form = WorkerRegForm()
         form = WorkerRegForm(initial={'role': 'worker'})
@@ -59,7 +55,6 @@ def oversight_register(request):
         form = OversightRegform(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            print("User role before saving:", user.role)  # Debug print
             user.role = 'oversight'
             user.set_password(form.cleaned_data.get('password'))
             user.save()
