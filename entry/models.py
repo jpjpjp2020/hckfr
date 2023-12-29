@@ -79,6 +79,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     username = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    # plaeholders for feature expansion
+    # custom_feedback_window = models.IntegerField(null=True, blank=True)
+    # custom_data_retention_period = models.IntegerField(null=True, blank=True)
+    # also need one for active feedback window at one point
 
     ROLE_CHOICES = (
         ('employer', 'Employer'),
