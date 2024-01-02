@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import FeedbackRoundForm
-from .models import FeedbackRound
+from .models import FeedbackRound, Feedback
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.views import View
@@ -60,6 +60,13 @@ def new_feedback_round(request):
 def all_active_rounds(request):
     active_rounds = FeedbackRound.objects.filter(employer=request.user, feedback_send_window_end__gte=timezone.now())
     return render(request, 'active/all_active_rounds.html', {'active_rounds': active_rounds})
+
+# Round specific page
+@role_required('employer', redirect_url='entry:employer_login')
+def round_details(request, round_code):
+    feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
+    feedbacks = Feedback.objects.filter(round=feedback_round)
+    return render(request, 'active/round_details.html', {'feedback_round': feedback_round, 'feedbacks': feedbacks})
 
 #FAQ
 @role_required('employer', redirect_url='entry:employer_login')

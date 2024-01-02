@@ -12,7 +12,7 @@
         <p>Accepts feedback until: {{ round.feedback_send_window_end|date:"F d, Y" }}</p>
         <p>Feedback retained until: {{ round.data_retention_end_time|date:"F d, Y" }} </p>
         <p>Code: {{ round.feedback_round_code }}</p>
-        <!-- Can add more -->
+        <a href="{% url 'feedback:round_details' round.feedback_round_code %}">View received feedback</a>
     </div>
     <br>
 {% endfor %}

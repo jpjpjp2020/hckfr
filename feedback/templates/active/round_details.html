@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1>Feedback for Round: {{ feedback_round.name }}</h1>
+    
+{% for feedback in feedbacks %}
+    <div>
+        <p>Feedback Title: {{ feedback.title }}</p>
+        <p>Feedback Content: {{ feedback.content }}</p>
+    </div>
+{% endfor %}
+
+{% endblock %}
