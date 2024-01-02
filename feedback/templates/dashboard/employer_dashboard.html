@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h1> Ep db</h1>
+
+<div class="tool-selection">
+        
+    <!-- Default to login. NB worker as well -->
+    
+    <div class="landing-link-group">
+
+        <div>
+            <a href="{% url 'feedback:new_feedback_round' %}" class="button">New Feedback Round</a>
+        </div>
+            
+        <div>
+            <a href="{% url 'feedback:all_active_rounds' %}" class="button">All Active Feedback Rounds</a>
+        </div>
+
+        <div>
+            <a href="{% url 'feedback:employer_guides' %}" class="button">Guides & FAQ</a>
+        </div>
+
+    </div>
+    
+    
+    
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock scripts %}
