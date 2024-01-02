@@ -5,6 +5,30 @@
 
 <h1> Worker db</h1>
 
+<div class="tool-selection">
+        
+    <div class="landing-link-group">
+
+        <div>
+            <a href="{% url 'feedback:worker_code_checker' %}" class="button">Code Checker</a>
+        </div>
+            
+        <div>
+            <a href="{% url 'feedback:worker_write_feedback' %}" class="button">Write Feedback & Edit Drafts</a>
+        </div>
+
+        <div>
+            <a href="{% url 'feedback:worker_sent_feedback' %}" class="button">Sent Feedback</a>
+        </div>
+
+        <div>
+            <a href="{% url 'feedback:worker_guides' %}" class="button">Guides & FAQ</a>
+        </div>
+
+    </div>
+    
+</div>
+
 {% endblock %}
 
 {% block scripts %}

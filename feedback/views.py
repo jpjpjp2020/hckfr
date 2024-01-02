@@ -68,7 +68,29 @@ def round_details(request, round_code):
     feedbacks = Feedback.objects.filter(round=feedback_round)
     return render(request, 'active/round_details.html', {'feedback_round': feedback_round, 'feedbacks': feedbacks})
 
-#FAQ
+# emploter guides and FAQ
 @role_required('employer', redirect_url='entry:employer_login')
 def employer_guides(request):
     return render(request, 'guides/employer_guides.html')
+
+# worker dashoard tools
+
+# code checker
+@role_required('worker', redirect_url='entry:worker_login')
+def worker_code_checker(request):
+    return render(request, 'active/worker_code_checker.html')
+
+# write feedback and drafts
+@role_required('worker', redirect_url='entry:worker_login')
+def worker_write_feedback(request):
+    return render(request, 'initial/worker_write_feedback.html')
+
+# worker sent feedback
+@role_required('worker', redirect_url='entry:worker_login')
+def worker_sent_feedback(request):
+    return render(request, 'active/worker_sent_feedback.html')
+
+# worker guides and FAQ
+@role_required('worker', redirect_url='entry:worker_login')
+def worker_guides(request):
+    return render(request, 'guides/worker_guides.html')

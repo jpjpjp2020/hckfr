@@ -14,4 +14,9 @@ urlpatterns = [
     path('edashboard/guides/', views.employer_guides, name='employer_guides'),
     # round specific conditional page
     path('round_details/<str:round_code>/', views.round_details, name='round_details'),
+    # worker tools
+    path('wdashboard/code_checker/', views.worker_code_checker, name='worker_code_checker'),
+    path('wdashboard/write_feedback/', views.worker_write_feedback, name='worker_write_feedback'),
+    path('wdashboard/sent_feedback/', views.worker_sent_feedback, name='worker_sent_feedback'),
+    path('wdashboard/guides/', views.worker_guides, name='worker_guides'),
 ]
