@@ -5,6 +5,17 @@
 
 <h1>All active feedback rounds</h1>
 
+{% for round in active_rounds %}
+    <div>
+        <h3>{{ round.name }}</h3>
+        <p>Number of feedback submissions: *Placeholder</p>
+        <p>Accepts feedback until: {{ round.feedback_send_window_end|date:"F d, Y" }}</p>
+        <p>Feedback retained until: {{ round.data_retention_end_time|date:"F d, Y" }} </p>
+        <p>Code: {{ round.feedback_round_code }}</p>
+        <!-- Can add more -->
+    </div>
+    <br>
+{% endfor %}
 
 
 {% endblock %}

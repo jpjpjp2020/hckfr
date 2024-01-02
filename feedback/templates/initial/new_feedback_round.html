@@ -3,9 +3,37 @@
 
 {% block content %}
 
-<h1>Add a new feedback round</h1>
+    <h1>Add a new feedback round</h1>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
+    <form method="post" action="{% url 'feedback:new_feedback_round' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_name" class="sr-only">Round name</label>
+            <input type="text" name="name" placeholder="Round name" id="id_name">
+            {% for error in form.round_name.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_create" class="sr-only">Activate & get the code</label>
+            <input type="submit" value="Activate & get the code">
+        </div>
+    </form>
+
+    <p>Only one feedback round can accept feedback at any given time to rule out targeted round codes.</p>
+    <p>As soon as the feedback send window is over, a new round can be generated.</p>
+    <p>The default service tier guarantees the feedback round accepting feedback for 7 days with data retention period of 37 days.</p>
+    <p>If you need to extend those defaults, feel free to check out the other plans.</p>
 
 {% endblock %}
 
