@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import FeedbackRoundForm, CodeCheckerForm
+from .forms import FeedbackRoundForm, CodeCheckerForm, FeedbackForm
 from .models import FeedbackRound, Feedback
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
@@ -111,8 +111,29 @@ def worker_code_checker(request):
 
 # write feedback and drafts
 @role_required('worker', redirect_url='entry:worker_login')
-def worker_write_feedback(request):
-    return render(request, 'initial/worker_write_feedback.html')
+def worker_write_feedback(request, round_code=None):
+    context = {'form': None, 'round_code': round_code}
+    if round_code:
+        try:
+            feedback_round = FeedbackRound.objects.get(feedback_round_code=round_code, feedback_send_window_end__gt=timezone.now())
+            context['feedback_round'] = feedback_round
+        except FeedbackRound.DoesNotExist:
+            return redirect('error_page')  # NEEDS error handling
+    if request.method == 'POST':
+        # Handle form submission
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.round = feedback_round
+            feedback.sender = request.user
+            feedback.receiver = feedback_round.employer
+            feedback.is_draft = True  # for draft
+            # feedback.encrypt_feedback()
+            feedback.save()
+    else:
+        form = FeedbackForm()
+    context['form'] = form
+    return render(request, 'initial/worker_write_feedback.html', context)  # {'form': form, 'round_code': round_code}
 
 # worker guides and FAQ
 @role_required('worker', redirect_url='entry:worker_login')
