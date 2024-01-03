@@ -114,11 +114,6 @@ def worker_code_checker(request):
 def worker_write_feedback(request):
     return render(request, 'initial/worker_write_feedback.html')
 
-# worker sent feedback
-@role_required('worker', redirect_url='entry:worker_login')
-def worker_sent_feedback(request):
-    return render(request, 'active/worker_sent_feedback.html')
-
 # worker guides and FAQ
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_guides(request):
