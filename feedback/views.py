@@ -91,7 +91,8 @@ def worker_code_checker(request):
                 feedback_round = FeedbackRound.objects.get(feedback_round_code=code, feedback_send_window_end__gt=timezone.now())
                 print("Accessing try")  # debug
                 print("Print feedbak round:", feedback_round)  # debug
-                context['round'] = feedback_round
+                context['feedback_round'] = feedback_round
+                print("Context test:", context)  # debug
             except FeedbackRound.DoesNotExist:
                 print("Accessing except")  # debug
                 print("No active feedback round found.")  # debug
@@ -100,7 +101,13 @@ def worker_code_checker(request):
         else:
             print("Form is not valid:", form.errors)  # debug
             context['errors'] = 'Please enter a valid code.'
-    return render(request, 'active/worker_code_checker.html')
+    else:
+        form = CodeCheckerForm()
+
+    context['form'] = form
+    context['errors'] = context.get('errors', None)
+
+    return render(request, 'active/worker_code_checker.html', context)
 
 # write feedback and drafts
 @role_required('worker', redirect_url='entry:worker_login')
