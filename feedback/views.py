@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import FeedbackRoundForm
+from .forms import FeedbackRoundForm, CodeCheckerForm
 from .models import FeedbackRound, Feedback
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.views import View
 from entry.decorators import role_required
 from django.utils import timezone
+
 
 # later can refactor dashboards into CBVs for modularity and element injection
 
@@ -78,6 +79,27 @@ def employer_guides(request):
 # code checker
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_code_checker(request):
+    print("Codechecker view was called:", request.method)  # debug
+    context = {'form': CodeCheckerForm(), 'round': None, 'errors': None}
+    if request.method == 'POST':
+        form = CodeCheckerForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['code']
+            print("Form is valid")  # debug
+            print("Code:", code)  # debug
+            try:
+                feedback_round = FeedbackRound.objects.get(feedback_round_code=code, feedback_send_window_end__gt=timezone.now())
+                print("Accessing try")  # debug
+                print("Print feedbak round:", feedback_round)  # debug
+                context['round'] = feedback_round
+            except FeedbackRound.DoesNotExist:
+                print("Accessing except")  # debug
+                print("No active feedback round found.")  # debug
+                context['errors'] = 'No active feedback round found for the provided code.'
+            print("Context before rendering:", context)  # debug
+        else:
+            print("Form is not valid:", form.errors)  # debug
+            context['errors'] = 'Please enter a valid code.'
     return render(request, 'active/worker_code_checker.html')
 
 # write feedback and drafts

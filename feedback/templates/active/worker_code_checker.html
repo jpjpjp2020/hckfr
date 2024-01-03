@@ -5,9 +5,42 @@
 
     <h1>Code checker</h1>
 
-    <h4>Run the employer-provided code through the tool to find out:</h4>
-    <p>The deadline for sending feedback (no less than 7 days from the feedback round creation).</p>
-    <p>Which email is set for feedback oversight</p>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'feedback:worker_code_checker' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_code" class="sr-only">Copy code here</label>
+            <input type="text" name="code" placeholder="Copy code here" id="id_code">
+            {% for error in form.code.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <input type="submit" value="Check">
+        </div>
+    </form>
+
+    {{ round }}
+    <!-- Remove this above later -->
+    {% if round %}
+        <div>
+            <h4>Round name: {{ round.name }}</h4>
+            <p>Accepts feedback until: {{ round.feedback_send_window_end|date:"F d, Y" }}</p>
+            <p>Feedback retained until: {{ round.data_retention_end_time|date:"F d, Y" }} </p>
+            <p>Code match: {{ round.feedback_round_code }}</p>
+        </div>
+    {% else %}
+        <h2>***TEST IF/ELSE No active feedback round found for the provided code.</h2>
+    {% endif %}
 
 
 {% endblock %}

@@ -26,7 +26,7 @@ class FeedbackRound(models.Model):
     employer = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=150)
     start_time = models.DateTimeField(auto_now_add=True)
-    feedback_round_code = models.CharField(max_length=25, default=uuid.uuid4, unique=True)
+    feedback_round_code = models.CharField(max_length=36, default=uuid.uuid4, unique=True)
     feedback_send_window_end = models.DateTimeField(default=default_feedback_send_window_end)  # call from separate funcs for lambda
     data_retention_end_time = models.DateTimeField(default=default_data_retention_end_time)  # call from separate funcs for lambda
 
@@ -37,6 +37,9 @@ class FeedbackRound(models.Model):
     def save(self, *args, **kwargs):
         # Placeholder for is_active status or other needed business logic
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.feedback_round_code
 
 
 class Feedback(models.Model):
