@@ -3,9 +3,11 @@ from django.contrib.auth import login
 from .forms import WorkerRegForm, EmployerRegForm, OversightRegform, UserLoginForm, WorkerLoginForm
 from django.contrib import messages
 from django_ratelimit.decorators import ratelimit
+from entry.decorators import role_based_redirect
 
 # home view
 
+@role_based_redirect
 def home(request):
     return render(request, 'landing/landing.html')
 
