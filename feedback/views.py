@@ -140,10 +140,14 @@ def worker_write_feedback(request, round_code):
             feedback.sender = request.user
             feedback.receiver = feedback_round.employer
             if 'save' in request.POST:
+                feedback = form.save(commit=False)
                 feedback.is_draft = True
                 feedback.save()
                 messages.success(request, 'Draft saved successfully.')
-                return redirect('feedback:worker_dashboard')
+                # Instead of redirecting, re-render the page with the form
+                form = FeedbackForm(instance=feedback)
+                context['form'] = form
+                return render(request, 'initial/worker_write_feedback.html', context)
             elif 'send' in request.POST:
                 feedback.is_draft = False
                 feedback.save()
