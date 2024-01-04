@@ -13,6 +13,14 @@ from django.utils import timezone
 
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_dashboard(request):
+    draft_feedback = Feedback.objects.filter(sender=request.user, is_draft=True).first()
+    has_draft = draft_feedback is not None
+    send_window_open = False
+
+    if has_draft:
+        feedback_round = draft_feedback.round
+        send_window_open = feedback_round.feedback_send_window_end > timezone.now()
+
     return render(request, 'dashboard/worker_dashboard.html')
 
 @role_required('employer', redirect_url='entry:employer_login')
@@ -28,7 +36,6 @@ def oversight_dashboard(request):
 class CustomLogoutView(View):
     def post(self, request, *args, **kwargs):
         logout(request)
-        # if needed - branch conditionally
         return HttpResponseRedirect('/')
     
 # employer dashboard tools
@@ -36,21 +43,17 @@ class CustomLogoutView(View):
 # new Feedback round view
 @role_required('employer', redirect_url='entry:employer_login')
 def new_feedback_round(request):
-    print("New feedback round view was called with method:", request.method)  # debug
     if request.method == 'POST':
         form = FeedbackRoundForm(request.POST)
         if form.is_valid():
             feedback_round = form.save(commit=False)
-            feedback_round.employer = request.user  # employer set to the current user
+            feedback_round.employer = request.user
             if FeedbackRound.can_initiate_new_round(request.user.id):
                 feedback_round.save()
                 messages.success(request, 'New feedback round created successfully.')
                 return redirect('feedback:all_active_rounds')
             else:
                 messages.error(request, 'Cannot create a new feedback round at this time - Another round is still accepting feedback.')
-                print("Cannot create a new round due to active send window.")  # debug
-        else:
-            print("Form is not valid:", form.errors)  # debug
     else:
         form = FeedbackRoundForm()
 
@@ -79,27 +82,17 @@ def employer_guides(request):
 # code checker
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_code_checker(request):
-    print("Codechecker view was called:", request.method)  # debug
     context = {'form': CodeCheckerForm(), 'round': None, 'errors': None}
     if request.method == 'POST':
         form = CodeCheckerForm(request.POST)
         if form.is_valid():
             code = form.cleaned_data['code']
-            print("Form is valid")  # debug
-            print("Code:", code)  # debug
             try:
                 feedback_round = FeedbackRound.objects.get(feedback_round_code=code, feedback_send_window_end__gt=timezone.now())
-                print("Accessing try")  # debug
-                print("Print feedbak round:", feedback_round)  # debug
                 context['feedback_round'] = feedback_round
-                print("Context test:", context)  # debug
             except FeedbackRound.DoesNotExist:
-                print("Accessing except")  # debug
-                print("No active feedback round found.")  # debug
                 context['errors'] = 'No active feedback round found for the provided code.'
-            print("Context before rendering:", context)  # debug
         else:
-            print("Form is not valid:", form.errors)  # debug
             context['errors'] = 'Please enter a valid code.'
     else:
         form = CodeCheckerForm()
@@ -109,70 +102,83 @@ def worker_code_checker(request):
 
     return render(request, 'active/worker_code_checker.html', context)
 
-# NB break up initial and drafting views and BRANCH in dashboard and show only link based on drft existence flag!!! \|/
-
-# write feedback and drafts
+# Initialize feedback | reuse CodeCheckerForm - rework split view initilizattion part too
 @role_required('worker', redirect_url='entry:worker_login')
-def worker_write_feedback(request, round_code=None):
-    context = {
-        'form': None,
-        'draft_round_code': round_code,
-        'draft_feedback': None,
-        'feedback_round': None,
-        'send_window_closed': False
-    }
+def worker_input_code(request):
+    form = CodeCheckerForm(request.POST or None)
+    
+    if request.method == 'POST' and form.is_valid():
+        code = form.cleaned_data.get('code')
+        try:
+            feedback_round = FeedbackRound.objects.get(feedback_round_code=code)
+            return redirect('feedback:worker_write_feedback', round_code=code)
+        except FeedbackRound.DoesNotExist:
+            form.add_error('code', 'Invalid code. Please try again.')
 
-    # try for matching feedbackround
-    if round_code:
-        feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
-        # Check for open send window
-        if feedback_round.feedback_send_window_end <= timezone.now():
-            # send window is closed -> inform user
-            context['send_window_closed'] = True
-            messages.info(request, 'The sending window for this feedback round has closed.')
-        else:
-            # if send window is open, check for any draft
-            draft_feedback = Feedback.objects.filter(
-                round=feedback_round, 
-                sender=request.user, 
-                is_draft=True
-            ).first()
-            context['draft_feedback'] = draft_feedback
-            context['feedback_round'] = feedback_round
+    context = {'form': form}
+    return render(request, 'initial/worker_input_code.html', context)
+
+# write feedback
+@role_required('worker', redirect_url='entry:worker_login')
+def worker_write_feedback(request, round_code):
+    feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
+    send_window_open = feedback_round.feedback_send_window_end > timezone.now()
+    
+    if not send_window_open:
+        messages.info(request, 'The sending window for this feedback round has closed.')
+        return redirect('feedback:worker_dashboard')
+
+    draft_feedback = Feedback.objects.filter(round=feedback_round, sender=request.user, is_draft=True).first()
+    if draft_feedback:
+        return redirect('feedback:worker_edit_feedback', round_code=round_code)
 
     if request.method == 'POST':
-        # if send window inactive, redirect to new form
-        if context['send_window_closed']:
-            return redirect('feedback:worker_write_feedback')
-
-        # form handling
-        form = FeedbackForm(request.POST, instance=context['draft_feedback'])
+        form = FeedbackForm(request.POST)
         if form.is_valid():
             feedback = form.save(commit=False)
             feedback.round = feedback_round
             feedback.sender = request.user
             feedback.receiver = feedback_round.employer
-            # Check if saved or send
-            if 'save' in request.POST and not context['send_window_closed']:
+            if 'save' in request.POST:
                 feedback.is_draft = True
                 feedback.save()
                 messages.success(request, 'Draft saved successfully.')
+                return redirect('feedback:worker_dashboard')
             elif 'send' in request.POST:
                 feedback.is_draft = False
                 feedback.save()
                 messages.success(request, 'Feedback sent successfully.')
-                # Reset the form for a new entry
-                form = FeedbackForm()
-                context['draft_feedback'] = None
-                # Redirect to dashboard or some confirmation page
                 return redirect('feedback:worker_dashboard')
     else:
-        form = FeedbackForm(instance=context['draft_feedback'])
+        form = FeedbackForm()
 
-    context['form'] = form
+    context = {'form': form, 'round_code': round_code}
     return render(request, 'initial/worker_write_feedback.html', context)
 
-# NB break up initial and drafting views and BRANCH in dashboard and show only link based on drft existence flag!!! /|\
+
+# edit feedback
+@role_required('worker', redirect_url='entry:worker_login')
+def worker_edit_feedback(request, round_code):
+    feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
+    draft_feedback = get_object_or_404(Feedback, round=feedback_round, sender=request.user, is_draft=True)
+    
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST, instance=draft_feedback)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            if 'save' in request.POST:
+                feedback.save()
+                messages.success(request, 'Draft updated successfully.')
+            elif 'send' in request.POST:
+                feedback.is_draft = False
+                feedback.save()
+                messages.success(request, 'Feedback sent successfully.')
+            return redirect('feedback:worker_dashboard')
+    else:
+        form = FeedbackForm(instance=draft_feedback)
+
+    context = {'form': form, 'round_code': round_code}
+    return render(request, 'initial/worker_edit_feedback.html', context)
 
 # worker guides and FAQ
 @role_required('worker', redirect_url='entry:worker_login')

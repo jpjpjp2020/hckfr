@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <h1>Start Writing</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'feedback:worker_input_code' %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_code" class="sr-only">Input code to start writing</label>
+            <input type="text" name="code" placeholder="Input code to start writing" id="id_code">
+            {% for error in form.code.errors %}
+                <div class="error">{{ error }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <input type="submit" value="Start">
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock scripts %}
