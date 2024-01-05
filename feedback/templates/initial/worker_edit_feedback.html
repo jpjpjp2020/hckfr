@@ -13,31 +13,35 @@
     {% endfor %}
 {% endif %}
 
-<form method="post" action="{% url 'feedback:worker_edit_feedback' round_code=round_code %}">
-    {% csrf_token %}
+    <form method="post" action="{% url 'feedback:worker_edit_feedback' round_code=round_code %}">
+        {% csrf_token %}
 
-    <div class="form-group">
-        <label for="id_title" class="sr-only">Title</label>
-        <input type="text" name="title" id="id_title" placeholder="Title" class="" value="{{ form.title.value|default_if_none:'' }}">
-        {% for error in form.title.errors %}
-            <p class="tailwind-class-for-error">{{ error }}</p>
-        {% endfor %}
-    </div>
+        <div class="form-group">
+            <label for="id_title" class="sr-only">Title</label>
+            <input type="text" name="title" id="id_title" placeholder="Title" class="" value="{{ form.title.value|default_if_none:'' }}">
+            {% for error in form.title.errors %}
+                <p class="tailwind-class-for-error">{{ error }}</p>
+            {% endfor %}
+        </div>
 
-    <div class="form-group">
-        <label for="id_content" class="sr-only">Content</label>
-        <textarea name="content" id="id_content" placeholder="Content" class="" rows="7">{{ form.content.value|default_if_none:'' }}</textarea>
-        {% for error in form.content.errors %}
-            <p class="tailwind-class-for-error">{{ error }}</p>
-        {% endfor %}
-    </div>
-    
-    <div class="form-group">
-        <button type="submit" name="save" class="">Save</button>
-        <button type="submit" name="send" class="">Send</button>
-    </div>
+        <div class="form-group">
+            <label for="id_content" class="sr-only">Content</label>
+            <textarea name="content" id="id_content" placeholder="Content" class="" rows="7">{{ form.content.value|default_if_none:'' }}</textarea>
+            {% for error in form.content.errors %}
+                <p class="tailwind-class-for-error">{{ error }}</p>
+            {% endfor %}
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" name="save" class="">Save</button>
+            <button type="submit" name="send" class="">Send</button>
+        </div>
 
-</form>
+    </form>
+
+    <p>
+        Please note that when you send feedback or if the send window is over for the feedback round, your draft will be deleted.
+    </p>
 
 {% endblock %}
 

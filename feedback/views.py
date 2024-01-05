@@ -174,6 +174,8 @@ def worker_write_feedback(request, round_code):
 def worker_edit_feedback(request, round_code):
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
     draft_feedback = get_object_or_404(Feedback, round=feedback_round, author=request.user, is_draft=True)
+
+    context = {'round_code': round_code}
     
     if request.method == 'POST':
         form = FeedbackForm(request.POST, instance=draft_feedback)
@@ -182,15 +184,17 @@ def worker_edit_feedback(request, round_code):
             if 'save' in request.POST:
                 feedback.save()
                 messages.success(request, 'Draft updated successfully.')
+                context['form'] = form
+                return render(request, 'initial/worker_edit_feedback.html', context)
             elif 'send' in request.POST:
                 feedback.is_draft = False
                 feedback.save()
                 messages.success(request, 'Feedback sent successfully.')
-            return redirect('feedback:worker_dashboard')
+                return redirect('feedback:worker_dashboard')
     else:
         form = FeedbackForm(instance=draft_feedback)
+        context['form'] = form
 
-    context = {'form': form, 'round_code': round_code}
     return render(request, 'initial/worker_edit_feedback.html', context)
 
 # worker guides and FAQ
