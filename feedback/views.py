@@ -13,22 +13,42 @@ logger = logging.getLogger(__name__)
 
 # later can refactor dashboards into CBVs for modularity and element injection
 
+# worker dashboard
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_dashboard(request):
     draft_feedback = Feedback.objects.filter(author=request.user, is_draft=True).first()
     has_draft = draft_feedback is not None
-    send_window_open = False
+
+    # Print statements for debugging
+    print("Has draft:", has_draft)
 
     if has_draft:
         feedback_round = draft_feedback.round
         send_window_open = feedback_round.feedback_send_window_end > timezone.now()
 
-    return render(request, 'dashboard/worker_dashboard.html')
+        # More print statements for debugging
+        print("Feedback round:", feedback_round)
+        print("Send window open:", send_window_open)
+        print("Feedback round code:", feedback_round.feedback_round_code)
+    else:
+        print("No draft feedback found.")
 
+    # Include 'has_draft' and 'send_window_open' in the context so you can inspect them in the template
+    context = {
+        'has_draft': has_draft,
+        'send_window_open': send_window_open,
+        'draft_feedback': draft_feedback,  # Include this so you can use it in the template
+    }
+
+    return render(request, 'dashboard/worker_dashboard.html', context)
+
+
+# employer dashboard
 @role_required('employer', redirect_url='entry:employer_login')
 def employer_dashboard(request):
     return render(request, 'dashboard/employer_dashboard.html')
 
+# oversight dashboard
 @role_required('oversight', redirect_url='entry:oversight_login')
 def oversight_dashboard(request):
     return render(request, 'dashboard/oversight_dashboard.html')
