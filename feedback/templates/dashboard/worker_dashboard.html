@@ -15,7 +15,7 @@
             
         <div>
             {% if has_draft %}
-                <a href="{% url 'feedback:worker_edit_feedback' draft_round_code %}" class="button">Edit Feedback</a>
+                <a href="{% url 'feedback:worker_edit_feedback' draft_feedback.round.feedback_round_code %}" class="button">Edit Feedback</a>
             {% else %}
                 <a href="{% url 'feedback:worker_input_code' %}" class="button">Write Feedback</a>
             {% endif %}

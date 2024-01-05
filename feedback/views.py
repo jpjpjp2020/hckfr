@@ -7,13 +7,15 @@ from django.http import HttpResponseRedirect
 from django.views import View
 from entry.decorators import role_required
 from django.utils import timezone
+import logging
 
+logger = logging.getLogger(__name__)
 
 # later can refactor dashboards into CBVs for modularity and element injection
 
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_dashboard(request):
-    draft_feedback = Feedback.objects.filter(sender=request.user, is_draft=True).first()
+    draft_feedback = Feedback.objects.filter(author=request.user, is_draft=True).first()
     has_draft = draft_feedback is not None
     send_window_open = False
 
@@ -121,6 +123,7 @@ def worker_input_code(request):
 # write feedback
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_write_feedback(request, round_code):
+    context = {'round_code': round_code}
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
     send_window_open = feedback_round.feedback_send_window_end > timezone.now()
     
@@ -128,35 +131,41 @@ def worker_write_feedback(request, round_code):
         messages.info(request, 'The sending window for this feedback round has closed.')
         return redirect('feedback:worker_dashboard')
 
-    draft_feedback = Feedback.objects.filter(round=feedback_round, sender=request.user, is_draft=True).first()
+    draft_feedback = Feedback.objects.filter(round=feedback_round, author=request.user, is_draft=True).first()
     if draft_feedback:
         return redirect('feedback:worker_edit_feedback', round_code=round_code)
 
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
+            print("POST Data:", request.POST)  # debug
             feedback = form.save(commit=False)
             feedback.round = feedback_round
-            feedback.sender = request.user
+            feedback.author = request.user
             feedback.receiver = feedback_round.employer
-            if 'save' in request.POST:
+            if request.POST.get('save-button') == 'save':
                 feedback = form.save(commit=False)
                 feedback.is_draft = True
                 feedback.save()
+                logger.debug("Draft saved for feedback round: %s by user: %s", feedback.round, request.user.username)  # print debug logger
+                print("Draft saved for feedback round:", feedback.round)  # manual debug print
                 messages.success(request, 'Draft saved successfully.')
-                # Instead of redirecting, re-render the page with the form
+                # stay with current form
                 form = FeedbackForm(instance=feedback)
                 context['form'] = form
                 return render(request, 'initial/worker_write_feedback.html', context)
-            elif 'send' in request.POST:
+            elif request.POST.get('send-button') == 'send':
                 feedback.is_draft = False
                 feedback.save()
                 messages.success(request, 'Feedback sent successfully.')
                 return redirect('feedback:worker_dashboard')
+            else:
+                print('Not accessing save or send')  # debug print
+                print("Form Errors:", form.errors)
     else:
         form = FeedbackForm()
 
-    context = {'form': form, 'round_code': round_code}
+    context['form'] = form
     return render(request, 'initial/worker_write_feedback.html', context)
 
 
@@ -164,7 +173,7 @@ def worker_write_feedback(request, round_code):
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_edit_feedback(request, round_code):
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
-    draft_feedback = get_object_or_404(Feedback, round=feedback_round, sender=request.user, is_draft=True)
+    draft_feedback = get_object_or_404(Feedback, round=feedback_round, author=request.user, is_draft=True)
     
     if request.method == 'POST':
         form = FeedbackForm(request.POST, instance=draft_feedback)

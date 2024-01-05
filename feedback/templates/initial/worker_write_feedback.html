@@ -18,23 +18,23 @@
 
     <div class="form-group">
         <label for="id_title" class="sr-only">Title</label>
-        <input type="text" name="title" id="id_title" placeholder="Title" class="tailwind-class-for-input" value="{{ form.title.value|default_if_none:'' }}">
+        <input type="text" name="title" id="id_title" placeholder="Title" class="" value="{{ form.title.value|default_if_none:'' }}">
         {% for error in form.title.errors %}
-            <p class="tailwind-class-for-error">{{ error }}</p>
+            <p class="">{{ error }}</p>
         {% endfor %}
     </div>
 
     <div class="form-group">
         <label for="id_content" class="sr-only">Text</label>
-        <textarea name="content" id="id_content" placeholder="Text" class="tailwind-class-for-textarea" rows="21">{{ form.content.value|default_if_none:'' }}</textarea>
+        <textarea name="content" id="id_content" placeholder="Text" class="" rows="21">{{ form.content.value|default_if_none:'' }}</textarea>
         {% for error in form.content.errors %}
             <p class="tailwind-class-for-error">{{ error }}</p>
         {% endfor %}
     </div>
     
     <div class="form-group">
-        <button type="submit" name="button" value="save" class="tailwind-class-for-button">Save</button>
-        <button type="submit" name="button" value="send" class="tailwind-class-for-button">Send</button>
+        <button type="submit" name="save-button" value="save" class="">Save</button>
+        <button type="submit" name="send-button" value="send" class="">Send</button>
     </div>
 
 </form>

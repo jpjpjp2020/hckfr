@@ -44,11 +44,13 @@ class FeedbackRound(models.Model):
 
 class Feedback(models.Model):
     round = models.ForeignKey(FeedbackRound, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, related_name='sent_feedback', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, related_name='sent_feedback', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_feedback', on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     content = models.TextField()
     is_draft = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     # encryption placeholder
     def encrypt_feedback(self):
