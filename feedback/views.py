@@ -137,7 +137,7 @@ def worker_input_code(request):
 def worker_write_feedback(request, round_code):
     context = {'round_code': round_code}
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
-    send_window_open = feedback_round.feedback_send_window_end > timezone.now()
+    send_window_open = feedback_round.feedback_send_window_end > timezone.now()  # Needed for more than round close send check!
     
     if not send_window_open:
         messages.info(request, 'The sending time for this feedback round is over.')
@@ -181,6 +181,9 @@ def worker_write_feedback(request, round_code):
                 context['form'] = form
                 return render(request, 'initial/worker_write_feedback.html', context)
             elif request.POST.get('send-button') == 'send':
+                if not send_window_open:  # TEST
+                    messages.error(request, 'The sending time for this feedback round is over.')
+                    return redirect('feedback:worker_dashboard')
                 feedback.is_draft = False
                 feedback.save()
                 request.session['new_feedback_session'] = False
@@ -199,6 +202,7 @@ def worker_write_feedback(request, round_code):
 def worker_edit_feedback(request, round_code):
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
     draft_feedback = get_object_or_404(Feedback, round=feedback_round, author=request.user, is_draft=True)
+    send_window_open = feedback_round.feedback_send_window_end > timezone.now()  # added for round close check TEST
 
     context = {'round_code': round_code}
     
@@ -212,6 +216,9 @@ def worker_edit_feedback(request, round_code):
                 context['form'] = form
                 return render(request, 'initial/worker_edit_feedback.html', context)
             elif 'send' in request.POST:
+                if not send_window_open:  # TEST
+                    messages.error(request, 'The sending time for this feedback round is over.')
+                    return redirect('feedback:worker_dashboard')
                 feedback.is_draft = False
                 feedback.save()
                 messages.success(request, 'Feedback sent successfully.')
