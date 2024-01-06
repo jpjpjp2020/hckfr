@@ -16,31 +16,23 @@ logger = logging.getLogger(__name__)
 # worker dashboard
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_dashboard(request):
+    request.session['new_feedback_session'] = False
     draft_feedback = Feedback.objects.filter(author=request.user, is_draft=True).first()
+    send_window_open = draft_feedback and draft_feedback.round.feedback_send_window_end > timezone.now()
+
+    if draft_feedback and not send_window_open:
+        draft_feedback.delete()
+        draft_feedback = None
+
     has_draft = draft_feedback is not None
 
-    # Print statements for debugging
-    print("Has draft:", has_draft)
-
-    if has_draft:
-        feedback_round = draft_feedback.round
-        send_window_open = feedback_round.feedback_send_window_end > timezone.now()
-
-        # More print statements for debugging
-        print("Feedback round:", feedback_round)
-        print("Send window open:", send_window_open)
-        print("Feedback round code:", feedback_round.feedback_round_code)
-    else:
-        print("No draft feedback found.")
-
-    # Include 'has_draft' and 'send_window_open' in the context so you can inspect them in the template
     context = {
         'has_draft': has_draft,
-        'send_window_open': send_window_open,
-        'draft_feedback': draft_feedback,  # Include this so you can use it in the template
+        'draft_feedback': draft_feedback,
     }
 
     return render(request, 'dashboard/worker_dashboard.html', context)
+
 
 
 # employer dashboard
@@ -148,27 +140,41 @@ def worker_write_feedback(request, round_code):
     send_window_open = feedback_round.feedback_send_window_end > timezone.now()
     
     if not send_window_open:
-        messages.info(request, 'The sending window for this feedback round has closed.')
+        messages.info(request, 'The sending time for this feedback round is over.')
+        return redirect('feedback:worker_dashboard')
+    
+    if Feedback.objects.filter(round=feedback_round, author=request.user, is_draft=False).exists():
+        messages.info(request, 'You have already sent feedback for this round.')
         return redirect('feedback:worker_dashboard')
 
+    new_feedback_session = request.session.get('new_feedback_session', False)
+
     draft_feedback = Feedback.objects.filter(round=feedback_round, author=request.user, is_draft=True).first()
-    if draft_feedback:
+    if draft_feedback and not new_feedback_session:
         return redirect('feedback:worker_edit_feedback', round_code=round_code)
 
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
-            print("POST Data:", request.POST)  # debug
-            feedback = form.save(commit=False)
-            feedback.round = feedback_round
-            feedback.author = request.user
-            feedback.receiver = feedback_round.employer
-            if request.POST.get('save-button') == 'save':
+
+            draft_feedback = Feedback.objects.filter(round=feedback_round, author=request.user, is_draft=True).first()
+            
+            if draft_feedback:
                 feedback = form.save(commit=False)
+                draft_feedback.title = feedback.title
+                draft_feedback.content = feedback.content
+                draft_feedback.save()
+                feedback = draft_feedback
+            else:
+                feedback = form.save(commit=False)
+                feedback.round = feedback_round
+                feedback.author = request.user
+                feedback.receiver = feedback_round.employer
                 feedback.is_draft = True
                 feedback.save()
-                logger.debug("Draft saved for feedback round: %s by user: %s", feedback.round, request.user.username)  # print debug logger
-                print("Draft saved for feedback round:", feedback.round)  # manual debug print
+
+            if request.POST.get('save-button') == 'save':
+                request.session['new_feedback_session'] = True  # session variable
                 messages.success(request, 'Draft saved successfully.')
                 # stay with current form
                 form = FeedbackForm(instance=feedback)
@@ -177,13 +183,12 @@ def worker_write_feedback(request, round_code):
             elif request.POST.get('send-button') == 'send':
                 feedback.is_draft = False
                 feedback.save()
+                request.session['new_feedback_session'] = False
                 messages.success(request, 'Feedback sent successfully.')
                 return redirect('feedback:worker_dashboard')
-            else:
-                print('Not accessing save or send')  # debug print
-                print("Form Errors:", form.errors)
     else:
         form = FeedbackForm()
+        request.session['new_feedback_session'] = True  # session variable
 
     context['form'] = form
     return render(request, 'initial/worker_write_feedback.html', context)
