@@ -73,10 +73,13 @@ def new_feedback_round(request):
 
     return render(request, 'initial/new_feedback_round.html', {'form': form})
 
-# All Active Feedback Rounds
+# All Active Feedback Rounds - ACTIVE STATUS NEEDS TO BE DRP-BASED - TEST THIS CHANGE TOO
 @role_required('employer', redirect_url='entry:employer_login')
 def all_active_rounds(request):
-    active_rounds = FeedbackRound.objects.filter(employer=request.user, feedback_send_window_end__gte=timezone.now())
+    active_rounds = FeedbackRound.objects.filter(
+        employer=request.user, 
+        data_retention_end_time__gte=timezone.now()
+    )
     return render(request, 'active/all_active_rounds.html', {'active_rounds': active_rounds})
 
 # Round specific page
