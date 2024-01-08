@@ -19,7 +19,7 @@ class FeedbackRoundAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(feedback_send_window_end__gte=timezone.now())
+        return qs.filter(data_retention_end_time__gte=timezone.now())
 
 @admin.register(Feedback)
 class FeedbackAdmin(admin.ModelAdmin):

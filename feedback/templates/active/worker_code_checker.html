@@ -32,7 +32,6 @@
     <div class="code-check">
         <p>Round name: {{ feedback_round.name|default:"-" }}</p>
         <p>Accepts feedback until: {{ feedback_round.feedback_send_window_end|date:"F d, Y, P"|default:"-" }} UTC</p>
-        <p>Feedback retained until: {{ feedback_round.data_retention_end_time|date:"F d, Y, P"|default:"-" }} UTC</p>
         <p>Code match: {{ feedback_round.feedback_round_code|default:"-" }}</p>
     </div>
 

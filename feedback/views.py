@@ -99,25 +99,18 @@ def employer_guides(request):
 # code checker
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_code_checker(request):
-    context = {'form': CodeCheckerForm(), 'round': None, 'errors': None}
-    if request.method == 'POST':
-        form = CodeCheckerForm(request.POST)
-        if form.is_valid():
+    form = CodeCheckerForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
             code = form.cleaned_data['code']
             try:
                 feedback_round = FeedbackRound.objects.get(feedback_round_code=code, feedback_send_window_end__gt=timezone.now())
-                context['feedback_round'] = feedback_round
             except FeedbackRound.DoesNotExist:
-                context['errors'] = 'No active feedback round found for the provided code.'
-        else:
-            context['errors'] = 'Please enter a valid code.'
+                messages.error(request, 'No active feedback round found for the provided code.')
+                feedback_round = None
     else:
-        form = CodeCheckerForm()
+        feedback_round = None
 
-    context['form'] = form
-    context['errors'] = context.get('errors', None)
-
-    return render(request, 'active/worker_code_checker.html', context)
+    return render(request, 'active/worker_code_checker.html', {'form': form, 'feedback_round': feedback_round})
 
 # Initialize feedback | reuse CodeCheckerForm - rework split view initilizattion part too
 @role_required('worker', redirect_url='entry:worker_login')
