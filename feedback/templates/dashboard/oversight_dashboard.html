@@ -3,7 +3,26 @@
 
 {% block content %}
 
-<h1> Os db</h1>
+<h1> Oversight portal</h1>
+
+<h3>Linked employer accounts:</h3>
+
+    {% for employer in linked_employers %}
+
+        <div>
+            <h4>
+                Employer: {{ employer.email }}
+            </h4>
+            <a href="{% url 'feedback:oversight_employer_rounds' employer.id %}">Active feedback rounds</a>
+        </div>
+
+    {% endfor %}
+    
+    <br>
+    <hr>
+    <div>
+        <a href="{% url 'feedback:oversight_guides' %}" class="button">Guides & FAQ</a>
+    </div>
 
 {% endblock %}
 

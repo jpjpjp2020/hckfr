@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .forms import FeedbackRoundForm, CodeCheckerForm, FeedbackForm
-from .models import FeedbackRound, Feedback
+from .models import FeedbackRound, Feedback, User
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.views import View
@@ -43,7 +43,10 @@ def employer_dashboard(request):
 # oversight dashboard
 @role_required('oversight', redirect_url='entry:oversight_login')
 def oversight_dashboard(request):
-    return render(request, 'dashboard/oversight_dashboard.html')
+    linked_employers = User.objects.filter(oversight_value=request.user.email)
+    context = {'linked_employers': linked_employers}
+
+    return render(request, 'dashboard/oversight_dashboard.html', context)
 
 # custom
 
@@ -240,3 +243,28 @@ def worker_edit_feedback(request, round_code):
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_guides(request):
     return render(request, 'guides/worker_guides.html')
+
+# oversight tools
+
+# Oversight page for employer-specific feedback rounds
+@role_required('oversight', redirect_url='entry:oversight_login')
+def oversight_employer_rounds(request, employer_id):
+    employer = get_object_or_404(User, pk=employer_id)
+    active_rounds = FeedbackRound.objects.filter(
+        employer=employer,
+        data_retention_end_time__gte=timezone.now()
+    )
+    return render(request, 'active/oversight_employer_rounds.html', {'active_rounds': active_rounds, 'employer': employer})
+
+# Oversight feedback page for specific rounds for employers
+@role_required('oversight', redirect_url='entry:oversight_login')
+def oversight_feedback_in_employer_rounds(request, round_code):
+    feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
+    feedbacks = Feedback.objects.filter(round=feedback_round, is_draft=False)
+
+    return render(request, 'active/oversight_feedback_in_employer_rounds.html', {'feedback_round': feedback_round, 'feedbacks': feedbacks})
+
+# oversight guides and FAQ
+@role_required('oversight', redirect_url='entry:oversight_login')
+def oversight_guides(request):
+    return render(request, 'guides/oversight_guides.html')

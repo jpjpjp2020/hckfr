@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Active Feedback Rounds for {{ employer.email }}</h1>
+
+{% for round in active_rounds %}
+    <div>
+        <h3>{{ round.name }}</h3>
+        <p>Number of feedback submissions: *Placeholder</p>
+        <p>Accepts feedback until: {{ round.feedback_send_window_end|date:"F d, Y, P" }} UTC</p>
+        <p>Feedback retained until: {{ round.data_retention_end_time|date:"F d, Y, P" }} UTC</p>
+        <p>Code: {{ round.feedback_round_code }}</p>
+        <a href="{% url 'feedback:oversight_feedback_in_employer_rounds' round.feedback_round_code %}">View received feedback</a>
+    </div>
+    <br>
+{% endfor %}
+
+{% endblock %}
