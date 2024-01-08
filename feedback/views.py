@@ -33,20 +33,30 @@ def worker_dashboard(request):
 
     return render(request, 'dashboard/worker_dashboard.html', context)
 
-
-
 # employer dashboard
 @role_required('employer', redirect_url='entry:employer_login')
 def employer_dashboard(request):
     return render(request, 'dashboard/employer_dashboard.html')
 
-# oversight dashboard
+# oversight_dashboard
 @role_required('oversight', redirect_url='entry:oversight_login')
 def oversight_dashboard(request):
     linked_employers = User.objects.filter(oversight_value=request.user.email)
-    context = {'linked_employers': linked_employers}
+    employers_rounds_info = {}
 
-    return render(request, 'dashboard/oversight_dashboard.html', context)
+    for employer in linked_employers:
+        active_rounds = FeedbackRound.objects.filter(
+            employer=employer, 
+            data_retention_end_time__gte=timezone.now()
+        ).exists()
+        employers_rounds_info[employer.id] = {'has_active_rounds': active_rounds}
+
+    print("Employers Rounds Info:", employers_rounds_info)  # Debug print
+
+    return render(request, 'dashboard/oversight_dashboard.html', {
+        'linked_employers': linked_employers, 
+        'employers_rounds_info': employers_rounds_info
+    })
 
 # custom
 
@@ -251,10 +261,22 @@ def worker_guides(request):
 def oversight_employer_rounds(request, employer_id):
     employer = get_object_or_404(User, pk=employer_id)
     active_rounds = FeedbackRound.objects.filter(
-        employer=employer,
+        employer=employer, 
         data_retention_end_time__gte=timezone.now()
     )
-    return render(request, 'active/oversight_employer_rounds.html', {'active_rounds': active_rounds, 'employer': employer})
+
+    rounds_with_feedback = {
+        round.id: Feedback.objects.filter(round=round, is_draft=False).exists()
+        for round in active_rounds
+    }
+
+    print("Rounds with Feedback:", rounds_with_feedback)  # Debug print
+
+    return render(request, 'active/oversight_employer_rounds.html', {
+        'active_rounds': active_rounds, 
+        'employer': employer, 
+        'rounds_with_feedback': rounds_with_feedback
+    })
 
 # Oversight feedback page for specific rounds for employers
 @role_required('oversight', redirect_url='entry:oversight_login')

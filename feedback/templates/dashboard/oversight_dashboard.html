@@ -1,30 +1,30 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static custom_filters %}
 
 {% block content %}
 
-<h1> Oversight portal</h1>
+<h1>Oversight portal</h1>
+
+<div>
+    <a href="{% url 'feedback:oversight_guides' %}" class="button">Guides & FAQ</a>
+</div>
+<hr>
+<br>
 
 <h3>Linked employer accounts:</h3>
 
-    {% for employer in linked_employers %}
-
-        <div>
-            <h4>
-                Employer: {{ employer.email }}
-            </h4>
-            <a href="{% url 'feedback:oversight_employer_rounds' employer.id %}">Active feedback rounds</a>
-        </div>
-
-    {% endfor %}
-    
-    <br>
-    <hr>
+{% for employer in linked_employers %}
     <div>
-        <a href="{% url 'feedback:oversight_guides' %}" class="button">Guides & FAQ</a>
+        <h4>Employer: {{ employer.email }}</h4>
+        {% with employer_rounds_info=employers_rounds_info|get_item:employer.id %}
+            {% if employer_rounds_info.has_active_rounds %}
+                <a href="{% url 'feedback:oversight_employer_rounds' employer.id %}">Active feedback rounds</a>
+            {% else %}
+                <p>This employer has no active feedback rounds.</p>
+            {% endif %}
+        {% endwith %}
     </div>
+    <hr>
+{% endfor %}
 
 {% endblock %}
-
-{% block scripts %}
-{% endblock scripts %}
