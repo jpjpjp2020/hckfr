@@ -35,6 +35,19 @@
         <p>Code match: {{ feedback_round.feedback_round_code|default:"-" }}</p>
     </div>
 
+    <div>
+        {% if has_draft %}
+            <a href="{% url 'feedback:worker_edit_feedback' draft_feedback.round.feedback_round_code %}" class="button">Edit Feedback</a>
+        {% else %}
+            <a href="{% url 'feedback:worker_input_code' %}" class="button">Write Feedback</a>
+        {% endif %}
+    </div>
+    
+    <div>
+        <a href="{% url 'feedback:worker_dashboard' %}" class="button">Back to Dashboard</a>
+    </div>
+    
+
 {% endblock %}
 
 {% block scripts %}

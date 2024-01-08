@@ -5,9 +5,10 @@
     
 {% for feedback in feedbacks %}
     <div>
-        <p>Feedback Title: {{ feedback.title }}</p>
+        <h4>Feedback Title: {{ feedback.title }}</h4>
         <p>Feedback Content: {{ feedback.content }}</p>
     </div>
+    <br>
 {% endfor %}
 
 {% endblock %}

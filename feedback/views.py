@@ -96,21 +96,32 @@ def employer_guides(request):
 
 # worker dashoard tools
 
-# code checker
+# code checker and direct link redering
 @role_required('worker', redirect_url='entry:worker_login')
 def worker_code_checker(request):
     form = CodeCheckerForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-            code = form.cleaned_data['code']
-            try:
-                feedback_round = FeedbackRound.objects.get(feedback_round_code=code, feedback_send_window_end__gt=timezone.now())
-            except FeedbackRound.DoesNotExist:
-                messages.error(request, 'No active feedback round found for the provided code.')
-                feedback_round = None
-    else:
-        feedback_round = None
+    feedback_round = None
+    draft_feedback = None
+    has_draft = False
 
-    return render(request, 'active/worker_code_checker.html', {'form': form, 'feedback_round': feedback_round})
+    if request.method == 'POST' and form.is_valid():
+        code = form.cleaned_data['code']
+        try:
+            feedback_round = FeedbackRound.objects.get(feedback_round_code=code)
+            # Check for draft for the round
+            draft_feedback = Feedback.objects.filter(author=request.user, round=feedback_round, is_draft=True).first()
+            has_draft = draft_feedback is not None
+            if feedback_round.feedback_send_window_end <= timezone.now():
+                messages.error(request, 'The sending window for this feedback round has closed.')
+        except FeedbackRound.DoesNotExist:
+            messages.error(request, 'No active feedback round found for the provided code.')
+
+    return render(request, 'active/worker_code_checker.html', {
+        'form': form,
+        'feedback_round': feedback_round,
+        'draft_feedback': draft_feedback,
+        'has_draft': has_draft
+    })
 
 # Initialize feedback | reuse CodeCheckerForm - rework split view initilizattion part too
 @role_required('worker', redirect_url='entry:worker_login')
