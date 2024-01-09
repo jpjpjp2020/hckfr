@@ -9,9 +9,9 @@
         {% for feedback in feedbacks %}
             <div>
                 <h4>Feedback Title: {{ feedback.title }}</h4>
-                <p>Feedback Content: {{ feedback.content }}</p>
+                <p>Feedback Content: {{ feedback.content|linebreaks }}</p>
             </div>
-            <br>
+            <hr>
         {% endfor %}
     {% else %}
         <p>No feedback available for this round.</p>
