@@ -36,7 +36,11 @@ def worker_dashboard(request):
 # employer dashboard
 @role_required('employer', redirect_url='entry:employer_login')
 def employer_dashboard(request):
-    return render(request, 'dashboard/employer_dashboard.html')
+    has_active_rounds = FeedbackRound.objects.filter(
+        employer=request.user, 
+        data_retention_end_time__gte=timezone.now()
+    ).exists()
+    return render(request, 'dashboard/employer_dashboard.html', {'has_active_rounds': has_active_rounds})
 
 # oversight_dashboard
 @role_required('oversight', redirect_url='entry:oversight_login')
@@ -86,14 +90,23 @@ def new_feedback_round(request):
 
     return render(request, 'initial/new_feedback_round.html', {'form': form})
 
-# All Active Feedback Rounds - ACTIVE STATUS NEEDS TO BE DRP-BASED - TEST THIS CHANGE TOO
+# All Active Feedback Rounds
 @role_required('employer', redirect_url='entry:employer_login')
 def all_active_rounds(request):
     active_rounds = FeedbackRound.objects.filter(
         employer=request.user, 
         data_retention_end_time__gte=timezone.now()
     )
-    return render(request, 'active/all_active_rounds.html', {'active_rounds': active_rounds})
+    
+    rounds_with_feedback = {
+        round.id: Feedback.objects.filter(round=round, is_draft=False).exists()
+        for round in active_rounds
+    }
+    
+    return render(request, 'active/all_active_rounds.html', {
+        'active_rounds': active_rounds, 
+        'rounds_with_feedback': rounds_with_feedback
+    })
 
 # Round specific page
 @role_required('employer', redirect_url='entry:employer_login')

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static custom_filters %}
 
 {% block content %}
 
-<h1> Ep db</h1>
+<h1>Employer dashboard</h1>
 
 <div class="tool-selection">
         
@@ -14,7 +14,11 @@
         </div>
             
         <div>
-            <a href="{% url 'feedback:all_active_rounds' %}" class="button">All Active Feedback Rounds</a>
+            {% if has_active_rounds %}
+                <a href="{% url 'feedback:all_active_rounds' %}" class="button">All Active Feedback Rounds</a>
+            {% else %}
+                <p>No active feedback rounds.</p>
+            {% endif %}
         </div>
 
         <div>
@@ -26,6 +30,3 @@
 </div>
 
 {% endblock %}
-
-{% block scripts %}
-{% endblock scripts %}
