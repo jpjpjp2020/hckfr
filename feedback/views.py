@@ -121,7 +121,7 @@ def all_active_rounds(request):
 def round_details(request, round_code):
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
     feedbacks = Feedback.objects.filter(round=feedback_round)
-    return render(request, 'active/round_details.html', {'feedback_round': feedback_round, 'feedbacks': feedbacks})
+    return render(request, 'active/round_details.html', {'feedback_round': feedback_round, 'feedbacks': feedbacks, 'feedback_round_code': round_code})
 
 # emploter guides and FAQ
 @role_required('employer', redirect_url='entry:employer_login')

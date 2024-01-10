@@ -4,6 +4,7 @@
 {% block content %}
 
     <h1>Feedback for Round: {{ feedback_round.name }}</h1>
+    <h2>Code: {{ feedback_round.feedback_round_code }}</h2>
 
     {% if feedbacks %}
         {% for feedback in feedbacks %}
