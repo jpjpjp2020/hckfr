@@ -34,4 +34,23 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    window.copyAllFeedbackToClipboard = function() {
+        const feedbackContainer = document.getElementById('feedback-content');
+        const textArea = document.createElement("textarea");
+    
+        textArea.value = feedbackContainer.innerText;
+        
+        document.body.appendChild(textArea);
+        textArea.select();
+    
+        navigator.clipboard.writeText(textArea.value).then(() => {
+            alert('Feedback copied to clipboard!');
+        }).catch(err => {
+            console.error('Error copying text: ', err);
+            alert('Error copying feedback. Please try again or manually copy the content.');
+        });
+    
+        document.body.removeChild(textArea);
+    }
+
 });

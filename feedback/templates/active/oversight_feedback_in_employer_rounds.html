@@ -3,19 +3,30 @@
 
 {% block content %}
 
-    <h1>Feedback for Round: {{ feedback_round.name }}</h1>
-    <h2>Code: {{ feedback_round.feedback_round_code }}</h2>
+    <div>
+        <button onclick="copyAllFeedbackToClipboard()">Copy All to Clipboard</button>
+    </div>
 
-    {% if feedbacks %}
-        {% for feedback in feedbacks %}
-            <div>
-                <h4>Feedback Title: {{ feedback.title }}</h4>
-                <p>Feedback Content: {{ feedback.content|linebreaks }}</p>
-            </div>
-            <hr>
-        {% endfor %}
-    {% else %}
-        <p>No feedback available for this round.</p>
-    {% endif %}
+    <div id="feedback-content">
+        <h1>Feedback for Round: {{ feedback_round.name }}</h1>
+        <h2>Code: {{ feedback_round.feedback_round_code }}</h2>
+        <hr>
+
+        {% if feedbacks %}
+            {% for feedback in feedbacks %}
+                <div>
+                    <h4>Feedback Title: {{ feedback.title }}</h4>
+                    <p>Feedback Content: {{ feedback.content|linebreaks }}</p>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No feedback available for this round.</p>
+        {% endif %}
+    </div>
 
 {% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/feedback.js' %}"></script>
+{% endblock scripts %}
