@@ -55,8 +55,6 @@ def oversight_dashboard(request):
         ).exists()
         employers_rounds_info[employer.id] = {'has_active_rounds': active_rounds}
 
-    print("Employers Rounds Info:", employers_rounds_info)  # Debug print
-
     return render(request, 'dashboard/oversight_dashboard.html', {
         'linked_employers': linked_employers, 
         'employers_rounds_info': employers_rounds_info
