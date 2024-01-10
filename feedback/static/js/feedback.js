@@ -1,19 +1,37 @@
-// textarea resize
+// DOM wrapper for preloading
+document.addEventListener('DOMContentLoaded', function() {
 
-const textarea = document.querySelector('textarea');
-textarea.addEventListener('input', autoResize);
+    // textarea resize
+    const textarea = document.querySelector('textarea');
+    if (textarea) {
+        textarea.addEventListener('input', autoResize);
 
-function autoResize() {
-    this.style.height = 'auto';
-    this.style.height = this.scrollHeight + 'px';
-}
-
-// trigger resize on loading
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    if (textarea.value) {
-        autoResize.call(textarea);
+        // Trigger resize on loading if textarea has content
+        if (textarea.value) {
+            autoResize.call(textarea);
+        }
     }
-});
 
-// efwefef
+    function autoResize() {
+        this.style.height = 'auto';
+        this.style.height = this.scrollHeight + 'px';
+    }
+
+    // Copy to clipboard
+    window.copyToClipboard = function(codeId) {
+        const codeElement = document.getElementById(codeId);
+
+        if (!codeElement) {
+            alert('No code found to copy.');
+            return;
+        }
+
+        navigator.clipboard.writeText(codeElement.textContent).then(() => {
+            alert('Code copied to clipboard.');
+        }).catch(err => {
+            console.error('Error copying text: ', err);
+            alert('Unable to copy the code. Please try again or manually copy the code.');
+        });
+    }
+
+});
