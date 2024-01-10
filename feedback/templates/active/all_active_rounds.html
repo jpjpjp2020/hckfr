@@ -8,9 +8,15 @@
     {% for round in active_rounds %}
         <div>
             <h3>{{ round.name }}</h3>
-            <p>Number of feedback submissions: *Placeholder</p>
-            <p>Accepts feedback until: {{ round.feedback_send_window_end|date:"F d, Y, P" }} UTC</p>
-            <p>Feedback retained until: {{ round.data_retention_end_time|date:"F d, Y, P" }} UTC</p>
+            <p>Number of feedback submissions: {{ rounds_feedback_count|get_item:round.id|default:"0" }}</p>
+
+            {% if round.feedback_send_window_end < current_time %}
+                <p>Accepted feedback until: {{ round.feedback_send_window_end|date:"F d, Y, P"|default:"-" }} UTC (Time over)</p>
+            {% else %}
+                <p>Accepts feedback until: {{ round.feedback_send_window_end|date:"F d, Y, P"|default:"-" }} UTC</p>
+            {% endif %}
+            
+            <p>Feedback retained until: {{ round.data_retention_end_time|date:"F d, Y, P"|default:"-" }} UTC</p>
             <p id="code-{{ forloop.counter }}">Code: {{ round.feedback_round_code }}</p>
             <button onclick="copyToClipboard('code-{{ forloop.counter }}')">Copy</button>
             <div>

@@ -93,6 +93,7 @@ def new_feedback_round(request):
 # All Active Feedback Rounds
 @role_required('employer', redirect_url='entry:employer_login')
 def all_active_rounds(request):
+    current_time = timezone.now()
     active_rounds = FeedbackRound.objects.filter(
         employer=request.user, 
         data_retention_end_time__gte=timezone.now()
@@ -102,10 +103,17 @@ def all_active_rounds(request):
         round.id: Feedback.objects.filter(round=round, is_draft=False).exists()
         for round in active_rounds
     }
+
+    rounds_feedback_count = {
+        round.id: Feedback.objects.filter(round=round, is_draft=False).count()
+        for round in active_rounds
+    }
     
     return render(request, 'active/all_active_rounds.html', {
         'active_rounds': active_rounds, 
-        'rounds_with_feedback': rounds_with_feedback
+        'rounds_with_feedback': rounds_with_feedback,
+        'rounds_feedback_count': rounds_feedback_count,
+        'current_time': current_time,
     })
 
 # Round specific page
@@ -272,6 +280,7 @@ def worker_guides(request):
 # Oversight page for employer-specific feedback rounds
 @role_required('oversight', redirect_url='entry:oversight_login')
 def oversight_employer_rounds(request, employer_id):
+    current_time = timezone.now()
     employer = get_object_or_404(User, pk=employer_id)
     active_rounds = FeedbackRound.objects.filter(
         employer=employer, 
@@ -283,12 +292,17 @@ def oversight_employer_rounds(request, employer_id):
         for round in active_rounds
     }
 
-    print("Rounds with Feedback:", rounds_with_feedback)  # Debug print
+    rounds_feedback_count = {
+        round.id: Feedback.objects.filter(round=round, is_draft=False).count()
+        for round in active_rounds
+    }
 
     return render(request, 'active/oversight_employer_rounds.html', {
         'active_rounds': active_rounds, 
         'employer': employer, 
-        'rounds_with_feedback': rounds_with_feedback
+        'rounds_with_feedback': rounds_with_feedback,
+        'rounds_feedback_count': rounds_feedback_count,
+        'current_time': current_time,
     })
 
 # Oversight feedback page for specific rounds for employers
