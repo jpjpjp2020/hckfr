@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Honest, unfiltered, constructive, key feedback repository</title>
 
+    {% load static %}
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+
     <style>
         .sr-only {
             position: absolute;
@@ -19,7 +22,7 @@
     </style>
 
 </head>
-<body>
+<body class="bg-red-100">
     <header>
         <!-- Universal navigation bar -->
         {% if request.user.is_authenticated %}

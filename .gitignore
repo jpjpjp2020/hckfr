@@ -56,4 +56,6 @@ npm-debug.log
 env/
 *.venv
 
-# Ignore specific CSS file - add this
+# Ignore output CSS file folder
+output/
+

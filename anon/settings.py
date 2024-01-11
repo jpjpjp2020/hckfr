@@ -173,6 +173,7 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'feedback/static'),
+    os.path.join(BASE_DIR, 'output/static'),
 ]
 
 # Default primary key field type
