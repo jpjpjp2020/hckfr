@@ -22,32 +22,36 @@
     </style>
 
 </head>
-<body class="bg-red-100">
-    <header>
-        <!-- Universal navigation bar -->
-        {% if request.user.is_authenticated %}
-            <div>
-                <form action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Logout</button>
-                </form>
-            </div>
-        {% else %}
-            <p>User is not authenticated</p>
-        {% endif %}
-    </header>
+<body>
 
-    <h1>huckfr</h1>
-    <br>
-    
-    {% block content %}
-    {% endblock %}
+    <div class="min-h-screen bg-gray-50 p-6 font-sans text-base font-normal">
 
-    {% block scripts %}
-    {% endblock scripts %}
-    
-    <footer>
-        <!-- Common footer -->
-    </footer>
+        <header>
+            <!-- Universal navigation bar -->
+            {% if request.user.is_authenticated %}
+                <div>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
+            {% endif %}
+        </header>
+
+        <h1>huckfr</h1>
+        <br>
+        
+        {% block content %}
+        {% endblock %}
+
+        {% block scripts %}
+        {% endblock scripts %}
+        
+        <footer>
+            <!-- Common footer -->
+        </footer>
+
+    </div>
+
 </body>
 </html>
