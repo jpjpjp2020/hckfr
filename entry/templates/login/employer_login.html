@@ -3,9 +3,11 @@
 
 {% block content %}
 
-    <div class="login container">
+    <div class="login container min-h-screen flex flex-col items-center">
 
-        <h1>Log in to the employer portal</h1>
+        <div class="text-xl text-center font-bold text-gray-900 my-16">
+            <h1>Log in to the employer portal</h1>
+        </div>
 
         {% if messages %}
             {% for message in messages %}
@@ -14,39 +16,51 @@
                 </div>
             {% endfor %}
         {% endif %}
+        
+        <div class="w-full flex flex-col space-y-16 px-6">
 
-        <form method="post" action="{% url 'entry:employer_login' %}">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_email" class="sr-only">Email</label>
-                <input type="email" name="username" placeholder="Email" id="id_email">
-                {% for error in form.email.errors %}
-                    <div class="error">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="form-group">
-                <label for="id_password" class="sr-only">Password</label>
-                <input type="password" name="password" placeholder="Password" id="id_password">
-                {% for error in form.password.errors %}
-                    <div class="error">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="form-group">
-                <label for="id_submit" class="sr-only">Sign in</label>
-                <input type="submit" value="Sign in">
-            </div>
-        </form>
+            <div class="login-form">
+                <form method="post" action="{% url 'entry:employer_login' %}">
 
-        <div class="additional-links">
+                    {% csrf_token %}
+                    <div class="flex flex-col space-y-8">
 
-            <div>
-                <a href="{% url 'entry:employer_register' %}">Don't have an account: Sign Up</a>
+                        <div class="form-group">
+                            <label for="id_email" class="sr-only">Email</label>
+                            <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="email" name="username" placeholder="Email" id="id_email">
+                            {% for error in form.email.errors %}
+                                <div class="error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password" class="sr-only">Password</label>
+                            <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="password" name="password" placeholder="Password" id="id_password">
+                            {% for error in form.password.errors %}
+                                <div class="error">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group w-full border border-gray-900 text-gray-900 py-3 rounded text-lg font-medium text-center">
+                            <label for="id_submit" class="sr-only">Sign in</label>
+                            <input type="submit" value="Sign in">
+                        </div>
+
+                    </div>
+                    
+                </form>
+            </div>
+    
+            <div class="additional-links flex flex-col space-y-6">
+    
+                <div>
+                    <a href="{% url 'entry:employer_register' %}">Don't have an account: <span class="underline">Sign Up</span></a>
+                </div>
+    
+                <div>
+                    <a href="{% url 'entry:home' %}">Wrong user role: <span class="underline">Change</span></a>
+                </div>
+                
             </div>
 
-            <div>
-                <a href="{% url 'entry:home' %}">Wrong user role: Change</a>
-            </div>
-            
         </div>
 
     </div>
