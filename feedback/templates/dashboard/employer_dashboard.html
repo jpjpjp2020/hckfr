@@ -3,30 +3,59 @@
 
 {% block content %}
 
-<h1>Employer dashboard</h1>
+    <div class="dahboard-container min-h-screen">
 
-<div class="tool-selection">
-        
-    <div class="landing-link-group">
-
-        <div>
-            <a href="{% url 'feedback:new_feedback_round' %}" class="button">New Feedback Round</a>
+        <div class="text-xl text-center font-bold text-gray-900 my-16">
+            <h1>Dashboard</h1>
         </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="tool-selection grid grid-cols-2 gap-4">
+
+            <div class="text-center p-3">
+                <div>
+                    <a href="{% url 'feedback:new_feedback_round' %}" class="button">
+                        <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/newfeedbackround.svg' %}" alt="New Feedback Round">
+                        <p class="text-lg font-medium">New Feedback Round</p>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center p-3">
+                <div>
+                    {% if has_active_rounds %}
+                        <a href="{% url 'feedback:all_active_rounds' %}" class="button">
+                            <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/activeroundsblack.svg' %}" alt="All Active Feedback Rounds">
+                            <p class="text-lg font-medium">All Active Feedback Rounds</p>
+                        </a>
+                    {% else %}
+                        <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/activeroundsgray.svg' %}" alt="All Active Feedback Rounds">
+                        <p class="text-lg font-medium text-gray-400">No active feedback rounds</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="text-center p-3">
+                <div>
+                    <a href="{% url 'feedback:employer_guides' %}" class="button">
+                        <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/guidesb.svg' %}" alt="Guides & FAQ">
+                        <p class="text-lg font-medium">Guides & FAQ</p>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center p-3">
+                <div>
+                    <!-- Grid item 4 -->
+                </div>
+            </div>
             
-        <div>
-            {% if has_active_rounds %}
-                <a href="{% url 'feedback:all_active_rounds' %}" class="button">All Active Feedback Rounds</a>
-            {% else %}
-                <p>No active feedback rounds.</p>
-            {% endif %}
-        </div>
-
-        <div>
-            <a href="{% url 'feedback:employer_guides' %}" class="button">Guides & FAQ</a>
         </div>
 
     </div>
-    
-</div>
 
 {% endblock %}
