@@ -26,8 +26,11 @@
 
     <div class="min-h-screen bg-white p-6 font-sans text-base font-normal text-gray-900">
 
-        <header>
-            <!-- Universal navigation bar -->
+        <header class="flex justify-between items-center">
+            <div class="text-xl font-bold text-gray-900">
+                <a href="{% url 'entry:home' %}">huckfr</a>
+            </div>
+        
             {% if request.user.is_authenticated %}
                 <div>
                     <form action="{% url 'logout' %}" method="post">
@@ -37,10 +40,6 @@
                 </div>
             {% endif %}
         </header>
-
-        <div class="text-xl font-bold text-gray-900">
-            <a href="{% url 'entry:home' %}">huckfr</a>
-        </div>
         
         {% block content %}
         {% endblock %}
