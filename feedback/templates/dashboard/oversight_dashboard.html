@@ -3,28 +3,60 @@
 
 {% block content %}
 
-<h1>Oversight portal</h1>
+    <div class="dahboard-container min-h-screen">
 
-<div>
-    <a href="{% url 'feedback:oversight_guides' %}" class="button">Guides & FAQ</a>
-</div>
-<hr>
-<br>
+        <div class="text-xl text-center font-bold text-gray-900 my-8">
+            <h1>Oversight portal</h1>
+        </div>
 
-<h3>Linked employer accounts:</h3>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
-{% for employer in linked_employers %}
-    <div>
-        <h4>Employer: {{ employer.email }}</h4>
-        {% with employer_rounds_info=employers_rounds_info|get_item:employer.id %}
-            {% if employer_rounds_info.has_active_rounds %}
-                <a href="{% url 'feedback:oversight_employer_rounds' employer.id %}">Active feedback rounds</a>
-            {% else %}
-                <p>This employer has no active feedback rounds.</p>
-            {% endif %}
-        {% endwith %}
+        <div class="tool-selection grid grid-cols-2 gap-4 mb-8">
+
+            <div class="text-center p-3">
+                <div>
+                    <a href="{% url 'feedback:oversight_guides' %}" class="button">
+                        <img class="mx-auto mb-2 h-8 w-auto" src="{% static '/img/guidesb.svg' %}" alt="Guides & FAQ">
+                        <p class="text-base font-medium">Guides & FAQ</p>
+                    </a>
+                </div>
+            </div>
+            <div class="text-center p-3">
+                <!-- Grid item 4 -->
+            </div>
+
+        </div>
+
+        <div class="px-6">
+
+            <div class="text-lg font-medium mb-4">
+                <h2>Linked employer accounts:</h2>
+            </div>
+
+            <div class="space-y-5">
+                {% for employer in linked_employers %}
+                    <div>
+                        <h3>Employer: {{ employer.email }}</h3>
+                        {% with employer_rounds_info=employers_rounds_info|get_item:employer.id %}
+                            {% if employer_rounds_info.has_active_rounds %}
+                                <a href="{% url 'feedback:oversight_employer_rounds' employer.id %}" class="underline font-medium">Active feedback rounds</a>
+                            {% else %}
+                                <p>This employer has no active feedback rounds.</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    <hr>
+                {% endfor %}
+            </div>
+
+        </div>
+
     </div>
-    <hr>
-{% endfor %}
 
 {% endblock %}
