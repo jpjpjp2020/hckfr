@@ -25,14 +25,14 @@
                     <div class="flex flex-col space-y-8">
                         <div class="form-group">
                             <label for="id_username" class="sr-only">Username</label>
-                            <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="username" name="username" placeholder="Username" id="id_username">
+                            <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="username" name="username" placeholder="Username" id="id_username" autocomplete="username">
                             {% for error in form.username.errors %}
                                 <div class="error">{{ error }}</div>
                             {% endfor %}
                         </div>
                         <div class="form-group">
                             <label for="id_password" class="sr-only">Password</label>
-                            <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="password" name="password" placeholder="Password" id="id_password">
+                            <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="password" name="password" placeholder="Password" id="id_password" autocomplete="current-password">
                             {% for error in form.password.errors %}
                                 <div class="error">{{ error }}</div>
                             {% endfor %}
