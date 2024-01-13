@@ -22,7 +22,7 @@
             <div class="text-center p-3">
                 <div>
                     <a href="{% url 'feedback:worker_code_checker' %}" class="button">
-                        <img class="mx-auto mb-2" src="{% static '/img/codecheckerb.svg' %}" alt="Code Checker">
+                        <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/codecheckerb.svg' %}" alt="Code Checker">
                         <p class="text-lg font-medium">Code Checker</p>
                     </a>
                 </div>
@@ -31,12 +31,12 @@
                 <div>
                     {% if has_draft %}
                         <a href="{% url 'feedback:worker_edit_feedback' draft_feedback.round.feedback_round_code %}" class="button">
-                            <img class="mx-auto mb-2" src="{% static '/img/feedbackweb.svg' %}" alt="Edit Feedback">
+                            <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/feedbackweb.svg' %}" alt="Edit Feedback">
                             <p class="text-lg font-medium">Edit Feedback</p>
                         </a>
                     {% else %}
                         <a href="{% url 'feedback:worker_input_code' %}" class="button">
-                            <img class="mx-auto mb-2" src="{% static '/img/feedbackweb.svg' %}" alt="Write Feedback">
+                            <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/feedbackweb.svg' %}" alt="Write Feedback">
                             <p class="text-lg font-medium">Write Feedback</p>
                         </a>
                     {% endif %}
@@ -45,7 +45,7 @@
             <div class="text-center p-3">
                 <div>
                     <a href="{% url 'feedback:worker_guides' %}" class="button">
-                        <img class="mx-auto mb-2" src="{% static '/img/guidesb.svg' %}" alt="Code Checker">
+                        <img class="mx-auto mb-2 h-10 w-auto" src="{% static '/img/guidesb.svg' %}" alt="Code Checker">
                         <p class="text-lg font-medium">Guides & FAQ</p>
                     </a>
                 </div>
