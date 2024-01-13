@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '842a-2001-1530-1003-2c5-f9f2-a415-1061-5f2d.ngrok-free.app',  # link based ngrok wildcard
+    '49a7-2001-1530-1003-2c5-f9f2-a415-1061-5f2d.ngrok-free.app',  # link based ngrok wildcard
     'localhost',   # Add localhost
     '127.0.0.1',   # Add the local IP address (IPv4)
     '::1',         # Add the local IP address (IPv6)
