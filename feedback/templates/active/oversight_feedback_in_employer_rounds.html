@@ -20,8 +20,7 @@
                 {% if feedbacks %}
                     {% for feedback in feedbacks %}
                         <div>
-                            <h4 class="font-medium">Feedback Title: {{ feedback.title }}</h4>
-                            <br>
+                            <h4 class="font-medium mb-4">Feedback Title: {{ feedback.title }}</h4>
                             <p>{{ feedback.content|linebreaks }}</p>
                         </div>
                         <hr>
