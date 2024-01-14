@@ -88,7 +88,7 @@ def new_feedback_round(request):
 
     return render(request, 'initial/new_feedback_round.html', {'form': form})
 
-# All Active Feedback Rounds
+# employer All Active Feedback Rounds
 @role_required('employer', redirect_url='entry:employer_login')
 def all_active_rounds(request):
     current_time = timezone.now()
@@ -114,11 +114,11 @@ def all_active_rounds(request):
         'current_time': current_time,
     })
 
-# Round specific page
+# Employer Round specific page
 @role_required('employer', redirect_url='entry:employer_login')
 def round_details(request, round_code):
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
-    feedbacks = Feedback.objects.filter(round=feedback_round)
+    feedbacks = Feedback.objects.filter(round=feedback_round, is_draft=False)
     return render(request, 'active/round_details.html', {'feedback_round': feedback_round, 'feedbacks': feedbacks})
 
 # emploter guides and FAQ
@@ -176,7 +176,7 @@ def worker_input_code(request):
 def worker_write_feedback(request, round_code):
     context = {'round_code': round_code}
     feedback_round = get_object_or_404(FeedbackRound, feedback_round_code=round_code)
-    send_window_open = feedback_round.feedback_send_window_end > timezone.now()  # Needed for more than round close send check!
+    send_window_open = feedback_round.feedback_send_window_end > timezone.now()
     
     if not send_window_open:
         messages.info(request, 'The sending time for this feedback round is over.')
