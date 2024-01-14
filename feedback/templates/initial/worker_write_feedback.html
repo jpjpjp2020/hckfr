@@ -26,7 +26,7 @@
 
         <div class="form-group">
             <label for="id_content" class="sr-only">Text</label>
-            <textarea name="content" id="id_content" placeholder="Text" class="" rows="21">{{ form.content.value|default_if_none:'' }}</textarea>
+            <textarea name="content" id="id_content" placeholder="Text" class="" rows="15">{{ form.content.value|default_if_none:'' }}</textarea>
             {% for error in form.content.errors %}
                 <p class="tailwind-class-for-error">{{ error }}</p>
             {% endfor %}
@@ -40,7 +40,7 @@
     </form>
 
     <p>
-        Please note that when you send feedback or if the send window is over for the feedback round, your draft will be deleted.
+        Please note that when you send feedback or once the send window is over for the feedback round, your draft will be deleted.
     </p>
     <p>
         You can only send feedback once with one feedback round code.

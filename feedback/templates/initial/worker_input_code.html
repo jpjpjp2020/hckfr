@@ -3,40 +3,48 @@
 
 {% block content %}
 
-    <p>
-        NB for ME - block new send with same code OR link same sends together for employer AND add conf check before sending
-    </p>
+    <div class="dahboard-container min-h-screen">
 
-    <h1>Start Writing</h1>
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <form method="post" action="{% url 'feedback:worker_input_code' %}">
-        {% csrf_token %}
-
-        <div class="form-group">
-            <label for="id_code" class="sr-only">Input code to start writing</label>
-            <input type="text" name="code" placeholder="Input code to start writing" id="id_code">
-            {% for error in form.code.errors %}
-                <div class="error">{{ error }}</div>
-            {% endfor %}
+        <div class="text-xl text-center font-bold text-gray-900 my-16">
+            <h1>Start Writing</h1>
         </div>
         
-        <div class="form-group">
-            <input type="submit" value="Start">
-        </div>
-    </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    <div>
-        <p>
-            Code input is needed to link your feedback to the right feedback round.
-        </p>
+        <div class="px-6 space-y-12">
+
+            <form method="post" action="{% url 'feedback:worker_input_code' %}">
+                {% csrf_token %}
+                <div class="flex flex-col space-y-4">
+                    <div class="form-group">
+                        <label for="id_code" class="sr-only">Input code to start writing</label>
+                        <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="text" name="code" placeholder="Input code to start writing" id="id_code">
+                        {% for error in form.code.errors %}
+                            <div class="error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-group w-full border border-gray-900 text-gray-900 py-3 rounded text-lg font-medium text-center">
+                        <input type="submit" value="Start">
+                    </div>
+                </div>
+                
+            </form>
+    
+            <div>
+                <p class="font-mono text-sm">
+                    Code input is needed to link your feedback to the right feedback round.
+                </p>
+            </div>
+
+        </div>
+
     </div>
 
 {% endblock %}

@@ -53,4 +53,27 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.removeChild(textArea);
     }
 
+    // modal for write send
+    const sendButton = document.querySelector('button[name="send-button"]');
+    if (sendButton) {
+        sendButton.addEventListener('click', function(event) {
+            const confirmation = confirm('Are you sure you want to send the feedback?');
+            if (!confirmation) {
+                // Prevent the form from submitting if the user clicks 'Cancel'
+                event.preventDefault();
+            }
+        });
+    }
+
+    // modal for edit send
+    const sendEditButton = document.querySelector('button[name="send"]');
+    if (sendEditButton) {
+        sendEditButton.addEventListener('click', function(event) {
+            const confirmation = confirm('Are you sure you want to send the feedback?');
+            if (!confirmation) {
+                event.preventDefault();
+            }
+        });
+    }
+
 });
