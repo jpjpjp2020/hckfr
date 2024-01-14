@@ -3,7 +3,7 @@
 
 {% block content %}
 
-    <div class="new-round-container min-h-screen">
+    <div class="active-rounds-container min-h-screen">
         
         <div class="text-xl text-center font-bold text-gray-900 my-8">
             <h1>All active feedback rounds</h1>
@@ -32,7 +32,7 @@
                     <p id="code-{{ forloop.counter }}">
                         <span class="font-medium">Code:</span> {{ round.feedback_round_code }}
                     </p>
-                    <div class="flex flex-col items-center my-6">
+                    <div class="flex flex-col items-center my-8">
                         <button class=" border border-gray-900 text-gray-900 px-3 py-1 rounded text-base font-medium text-center" onclick="copyToClipboard('code-{{ forloop.counter }}')">
                             Copy Code
                         </button>
@@ -51,8 +51,6 @@
         </div>
 
     </div>
-
-    
 
 {% endblock %}
 

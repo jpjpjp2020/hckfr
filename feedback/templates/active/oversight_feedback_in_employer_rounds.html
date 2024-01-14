@@ -3,26 +3,36 @@
 
 {% block content %}
 
-    <div>
-        <button onclick="copyAllFeedbackToClipboard()">Copy All to Clipboard</button>
-    </div>
+    <div class="round-details-container min-h-screen px-6">
 
-    <div id="feedback-content">
-        <h1>Feedback for Round: {{ feedback_round.name }}</h1>
-        <h2>Code: {{ feedback_round.feedback_round_code }}</h2>
-        <hr>
+        <div class="flex flex-col items-center my-8">
+            <button class=" border border-gray-900 text-gray-900 px-3 py-1 rounded text-base font-medium text-center" onclick="copyAllFeedbackToClipboard()">Copy All to Clipboard</button>
+        </div>
+    
+        <div id="feedback-content">
 
-        {% if feedbacks %}
-            {% for feedback in feedbacks %}
-                <div>
-                    <h4>Feedback Title: {{ feedback.title }}</h4>
-                    <p>Feedback Content: {{ feedback.content|linebreaks }}</p>
-                </div>
-                <hr>
-            {% endfor %}
-        {% else %}
-            <p>No feedback available for this round.</p>
-        {% endif %}
+            <div class="flex flex-col w-full text-base text-center font-bold text-gray-900 my-8">
+                <h1>Feedback for Round: {{ feedback_round.name }}</h1>
+                <h2>Code: {{ feedback_round.feedback_round_code }}</h2>
+            </div>
+
+            <div class="space-y-5">
+                {% if feedbacks %}
+                    {% for feedback in feedbacks %}
+                        <div>
+                            <h4 class="font-medium">Feedback Title: {{ feedback.title }}</h4>
+                            <br>
+                            <p>{{ feedback.content|linebreaks }}</p>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <p>No feedback available for this round.</p>
+                {% endif %}
+            </div>
+            
+        </div>
+
     </div>
 
 {% endblock %}
