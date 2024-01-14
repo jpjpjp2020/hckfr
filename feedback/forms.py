@@ -17,5 +17,5 @@ class FeedbackForm(forms.ModelForm):
         model = Feedback
         fields = ['title', 'content']
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 15}),
+            'content': forms.Textarea(attrs={'rows': 9}),
         }

@@ -17,38 +17,46 @@
             {% endfor %}
         {% endif %}
 
-        <form method="post" action="{% url 'feedback:worker_write_feedback' round_code=round_code %}">
-            {% csrf_token %}
+        <div class="px-6 space-y-10">
 
-            <div class="form-group">
-                <label for="id_title" class="sr-only">Title</label>
-                <input type="text" name="title" id="id_title" placeholder="Title" class="" value="{{ form.title.value|default_if_none:'' }}">
-                {% for error in form.title.errors %}
-                    <p class="">{{ error }}</p>
-                {% endfor %}
+            <form method="post" action="{% url 'feedback:worker_write_feedback' round_code=round_code %}">
+                {% csrf_token %}
+
+                <div class="flex flex-col">
+                    <div class="form-group mb-4">
+                        <label for="id_title" class="sr-only">Title</label>
+                        <input class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="text" name="title" id="id_title" placeholder="Title" value="{{ form.title.value|default_if_none:'' }}">
+                        {% for error in form.title.errors %}
+                            <p class="">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+        
+                    <div class="form-group mb-2">
+                        <label for="id_content" class="sr-only">Text</label>
+                        <textarea class="w-full border border-gray-900 rounded text-lg py-3 pl-2" name="content" id="id_content" placeholder="Text" rows="9">{{ form.content.value|default_if_none:'' }}</textarea>
+                        {% for error in form.content.errors %}
+                            <p class="tailwind-class-for-error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-group grid grid-cols-2 gap-4">
+                        <button class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="submit" name="save-button" value="save" class="">Save</button>
+                        <button class="w-full border border-gray-900 rounded text-lg py-3 pl-2" type="submit" name="send-button" value="send" class="">Send</button>
+                    </div>
+                </div>
+    
+            </form>
+    
+            <div class="font-mono text-sm space-y-4">
+                <p>
+                    Please note that when you send feedback or once the send window is over for the feedback round, your draft will be deleted.
+                </p>
+                <p>
+                    You can only send feedback once with one feedback round code.
+                </p>
             </div>
 
-            <div class="form-group">
-                <label for="id_content" class="sr-only">Text</label>
-                <textarea name="content" id="id_content" placeholder="Text" class="" rows="15">{{ form.content.value|default_if_none:'' }}</textarea>
-                {% for error in form.content.errors %}
-                    <p class="tailwind-class-for-error">{{ error }}</p>
-                {% endfor %}
-            </div>
-            
-            <div class="form-group">
-                <button type="submit" name="save-button" value="save" class="">Save</button>
-                <button type="submit" name="send-button" value="send" class="">Send</button>
-            </div>
-
-        </form>
-
-        <p>
-            Please note that when you send feedback or once the send window is over for the feedback round, your draft will be deleted.
-        </p>
-        <p>
-            You can only send feedback once with one feedback round code.
-        </p>
+        </div>
 
     </div>
 
