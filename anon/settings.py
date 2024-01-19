@@ -30,13 +30,13 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'b179-2001-1530-1003-2c5-5872-1db4-8cd5-a1c7.ngrok-free.app',  # link based ngrok
+    'f67e-2001-1530-1003-2c5-e950-dd41-d3b3-d223.ngrok-free.app',  # link based ngrok
     'localhost',   # Add localhost
     '127.0.0.1',   # Add the local IP address (IPv4)
     '::1',         # Add the local IP address (IPv6)
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://b179-2001-1530-1003-2c5-5872-1db4-8cd5-a1c7.ngrok-free.app'] # link based ngrok for https crsf in ngrok
+CSRF_TRUSTED_ORIGINS = ['https://f67e-2001-1530-1003-2c5-e950-dd41-d3b3-d223.ngrok-free.app'] # link based ngrok for https crsf in ngrok
 
 # Application definition
 

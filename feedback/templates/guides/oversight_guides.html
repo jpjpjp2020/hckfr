@@ -3,10 +3,70 @@
 
 {% block content %}
 
-<h1>Guides</h1>
+    <div class="round-details-container min-h-screen">
 
+        <div class="text-xl text-center font-bold text-gray-900 my-8">
+            <h1>Guides</h1>
+        </div>
+    
+        <div class="px-6 space-y-8">
+    
+            <div class="space-y-4">
 
+                <h2 class="text-lg font-medium">
+                    Timeframes & Feedback Process:
+                </h2>
+                <p>
+                    <span class=" text-lg font-bold">1.</span> The default feedback sending window is 7 days, and the received data retention period is 37 days.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">2.</span> Initializing a new feedback round generates a code, which  employers can share with employees. They can use this code to send feedback through the employee portal.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">3.</span> Feedback sending windows cannot overlap. Once the feedback sending window for an active round is over, another feedback round can be initiated by the employer account. This prevents the possibility of targeted code distribution.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">4.</span> If your company requires a longer data retention or feedback sending window, please refer to the pricing page. Plans can be changed by the employer account. Oversight account gets the same rights via its association to specific employer accounts.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">5.</span> Please note that the sending window cannot be less than 7 days. This duration ensures employees have sufficient time to formulate valuable feedback, potentially using their own devices to avoid possible device session playback and other tracking methods.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">6.</span> When employees send feedback, it is also routed to your oversight portal. This allows you to monitor and analyze raw feedback directly, raising the quality of feedback via signalling your employees that their voice will be heard. 
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">7.</span> Feedback is encrypted. We do not have access to the content of the feedback sent.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">8.</span> Sent feedback does not display the author's account details
+                </p>
 
+            </div>
+    
+            <div class="space-y-4">
+
+                <h2 class="text-lg font-medium">
+                    Oversight:
+                </h2>
+                <p>
+                    <span class=" text-lg font-bold">1.</span> The email used for the oversight account must be different from that of the employer account.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">2.</span> The oversight email should generally belong to company stakeholders whose interest in employees' voices would encourage employees to generate specific, valuable, and constructive insights.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">3.</span> An oversight account can be linked to more than one employer account. However, feedback is organized first by linked employer accounts and then by active feedback rounds for those employers.
+                </p>
+                <p>
+                    <span class=" text-lg font-bold">4.</span> The data retention time for your oversight accounts matches that of the linked employer accounts. However, terminating an employer account will not remove data from your oversight account before the end of the data retention period.
+                </p>
+
+            </div>
+    
+        </div>
+
+    </div>
+   
 {% endblock %}
 
 {% block scripts %}
