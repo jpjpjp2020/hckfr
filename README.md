@@ -18,5 +18,11 @@
 - Feedback round creation generates a random code, which can be used to send feedback.
 - Using the code to send feedback sends it both to the round creatr and to the oversight account.
 - There is a data retention period (37d by default), which can be extended globally or later by account type/tier - hopefully reducing the db load and offering logical upgrade options as SaaS.
+- Feedback forms do not have any setup for questions and scoring, as this would be the best way to skew data in aggregate - announcing a topic should be enough for v.1 to get raw feedback.
 
+### UI
+
+- Mobile first only atm.
+- Tailwind CSS
+- Very minimalist, as mainly would be  text-based service
 
