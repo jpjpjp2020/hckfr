@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class FeedbackInline(admin.TabularInline):
     model = Feedback
-    extra = 0  # !!!Prevents displaying extra empty forms
+    extra = 0  # !!!prevents displaying extra empty forms
     fields = ['author', 'receiver', 'is_draft', 'created_at', 'updated_at']
     readonly_fields = ['created_at', 'updated_at']
 

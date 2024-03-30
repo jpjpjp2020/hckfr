@@ -40,7 +40,7 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, oversight_value=oversight_value, **extra_fields)
         user.set_password(password)
         user.role = 'employer'
-        user.is_active = True  # Explicitly set is_active to True
+        user.is_active = True  # explicitly set is_active to True
         user.save(using=self._db)
         return user
     

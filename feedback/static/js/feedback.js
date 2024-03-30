@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (textarea) {
         textarea.addEventListener('input', autoResize);
 
-        // Trigger resize on loading if textarea has content
+        // trigger resize on loading if textarea has content
         if (textarea.value) {
             autoResize.call(textarea);
         }
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         this.style.height = this.scrollHeight + 'px';
     }
 
-    // Copy to clipboard
+    // copy to clipboard
     window.copyToClipboard = function(codeId) {
         const codeElement = document.getElementById(codeId);
 
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sendButton.addEventListener('click', function(event) {
             const confirmation = confirm('Are you sure you want to send the feedback?');
             if (!confirmation) {
-                // Prevent the form from submitting if the user clicks 'Cancel'
+                // prevent the form from submitting if the user clicks 'Cancel'
                 event.preventDefault();
             }
         });

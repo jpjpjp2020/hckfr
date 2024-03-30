@@ -30,13 +30,13 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'f67e-2001-1530-1003-2c5-e950-dd41-d3b3-d223.ngrok-free.app',  # link based ngrok
+    '526f-2001-1530-1003-3740-582a-a954-f950-8af7.ngrok-free.app',  # link based ngrok
     'localhost',   # Add localhost
     '127.0.0.1',   # Add the local IP address (IPv4)
     '::1',         # Add the local IP address (IPv6)
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://f67e-2001-1530-1003-2c5-e950-dd41-d3b3-d223.ngrok-free.app'] # link based ngrok for https crsf in ngrok
+CSRF_TRUSTED_ORIGINS = ['https://526f-2001-1530-1003-3740-582a-a954-f950-8af7.ngrok-free.app'] # link based ngrok for https crsf in ngrok
 
 # Application definition
 
@@ -114,22 +114,20 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
         'OPTIONS': {
-            'max_similarity': 0.6,  # Prevents users from using passwords too similar to their username or other attributes
+            'max_similarity': 0.6,
         }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
-            'min_length': 8,  # Sets the minimum password length to 8 characters
+            'min_length': 8,
         }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-        # Prevents users from using common passwords like "password" or "12345"
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-        # Prevents users from using entirely numeric passwords
     },
 ]
 

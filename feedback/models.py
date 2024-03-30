@@ -35,7 +35,7 @@ class FeedbackRound(models.Model):
         return not cls.objects.filter(employer_id=employer_id, feedback_send_window_end__gt=timezone.now()).exists()
 
     def save(self, *args, **kwargs):
-        # Placeholder for is_active status or other needed business logic
+        # placeholder for is_active status or other needed business logic
         super().save(*args, **kwargs)
 
     def __str__(self):

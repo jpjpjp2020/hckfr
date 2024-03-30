@@ -98,7 +98,7 @@ class UserLoginForm(AuthenticationForm):
     pass
 
 
-# Separate employeeworker login form
+# Separate employee/worker login form
 
 class WorkerLoginForm(AuthenticationForm):
     def clean(self):
